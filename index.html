@@ -1,0 +1,2123 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>HSK 4 — карточки</title>
+<style>
+:root{--bg:#e9eef0;--card:#fff;--tx:#12212a;--mu:#5b6b73;--ac:#0b6e6e;--on:#fff;--bd:#d3dde1;--ok:#2f855a;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1417;--card:#172126;--tx:#e8f0f2;--mu:#93a5ad;--ac:#4fd1c5;--on:#062a2a;--bd:#263339;--ok:#68d391;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1417;--card:#172126;--tx:#e8f0f2;--mu:#93a5ad;--ac:#4fd1c5;--on:#062a2a;--bd:#263339;--ok:#68d391;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 -apple-system,"PingFang SC","Hiragino Sans GB","Noto Sans SC",system-ui,sans-serif;padding-bottom:72px}
+.w{max-width:640px;margin:0 auto;padding:12px}
+#top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.lg{font:700 22px "Songti SC","STSong","Noto Serif SC",serif}
+select,input,textarea,button{font:inherit;color:var(--tx);background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:8px 10px}
+textarea{width:100%;margin:6px 0}
+input{flex:1;min-width:0}
+.row{display:flex;gap:8px;margin-bottom:10px}.row select{flex:1;min-width:0}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:14px;margin-bottom:10px}
+.c{text-align:center;padding:26px 14px;min-height:240px}
+.hz,.wh{font-family:"Songti SC","STSong","Noto Serif SC",serif}
+.hz{font-size:68px;line-height:1.2}.wh{font-size:21px}
+.py{font-size:22px;color:var(--ac);margin:6px 0}.ru{font-size:22px;margin:6px 0}
+.ex{margin-top:16px;padding-top:12px;border-top:1px solid var(--bd);text-align:left}
+.mu{color:var(--mu);font-size:14px}.cnt{color:var(--mu);font-size:14px;text-align:right;margin-bottom:4px}
+.big{font-size:48px}.sp{border:0;background:none;padding:0 4px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.g4 button{padding:14px 4px;font-weight:600;color:#fff;border:0}
+.g0{background:#b42318}.g1{background:#b45309}.g2{background:#2f855a}.g3{background:#1d4ed8}
+.pri{background:var(--ac);color:var(--on);border:0;padding:10px 18px;font-weight:600}
+.wr{display:flex;justify-content:space-between;gap:8px;padding:10px 4px;border-bottom:1px solid var(--bd)}
+.bd{font-size:12px;color:var(--mu);text-align:right;white-space:nowrap}
+.bar{height:8px;background:var(--bd);border-radius:4px;margin-top:8px;overflow:hidden}.bar i{display:block;height:100%;background:var(--ok)}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--card);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav button{flex:1;border:0;border-radius:0;background:none;padding:14px 4px;color:var(--mu)}
+nav .on{color:var(--ac);font-weight:700}
+</style></head>
+<body>
+<div class="w"><div id="top"></div><div id="app"></div></div>
+<nav>
+<button data-t="study" onclick="go('study')">Карточки</button>
+<button data-t="list" onclick="go('list')">Слова</button>
+<button data-t="prog" onclick="go('prog')">Прогресс</button>
+<button data-t="more" onclick="go('more')">Ещё</button>
+</nav>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+const W0=`1|爱|ài|||||to love|
+1|八|bā|||||eight|
+1|爸爸|bàba|||||dad|
+1|吧|ba|||||particle indicating suggestion, confirmation, or hesitation|
+1|白天|báitiān|||||daytime|
+1|百|bǎi|||||hundred|
+1|半|bàn|||||half; (half, semi-)|
+1|包子|bāozi|||||steamed stuffed bun|
+1|杯子|bēizi|||||cup, glass|
+1|本|běn|||||measure word for books|
+1|边|biān|||||side; suffix indicating direction|
+1|病|bìng|||||illness, disease; to be ill|
+1|不|bù|||||not, no|
+1|不客气|bú kèqi|||||you're welcome|
+1|不要|búyào|||||don't, not want|
+1|菜|cài|||||vegetable, dish|
+1|茶|chá|||||tea|
+1|唱|chàng|||||to sing|
+1|超市|chāoshì|||||supermarket|
+1|车|chē|||||vehicle, car|
+1|吃|chī|||||to eat|
+1|出租车|chūzūchē|||||taxi|
+1|穿|chuān|||||to wear|
+1|打电话|dǎ diànhuà|||||to make a phone call|
+1|大|dà|||||big|
+1|大家|dàjiā|||||everyone|
+1|大学|dàxué|||||university|
+1|大学生|dàxuéshēng|||||university student|
+1|到|dào|||||to arrive|
+1|的|de|||||possessive or modifying particle|
+1|第|dì|||||prefix for ordinal numbers|
+1|弟弟|dìdi|||||younger brother|
+1|点|diǎn|||||measure word for small round things; (point, dot)|
+1|店|diàn|||||shop, store|
+1|电话|diànhuà|||||telephone, phone call|
+1|电脑|diànnǎo|||||computer|
+1|电视|diànshì|||||television|
+1|电影|diànyǐng|||||movie, film|
+1|电影院|diànyǐngyuàn|||||cinema|
+1|东西|dōngxi|||||thing, object|
+1|都|dōu|||||all, both|
+1|读|dú|||||to read|
+1|读书|dúshū|||||to read a book|
+1|对|duì|||||correct, right; to, toward, for; (to treat; pair)|
+1|对不起|duìbuqǐ|||||sorry|
+1|多|duō|||||many, much; to have more; how many, how much; (more, over)|
+1|多少|duōshao|сколько|这个多少钱？|Zhège duōshao qián?|Сколько это стоит?|how many, how much|
+1|儿子|érzi|||||son|
+1|二|èr|||||two|
+1|饭|fàn|||||cooked rice, meal|
+1|饭店|fàndiàn|||||restaurant|
+1|房间|fángjiān|||||room|
+1|非常|fēicháng|||||very, extremely|
+1|飞机|fēijī|||||airplane|
+1|分|fēn|||||minute; (to divide, to separate; component, part)|
+1|分钟|fēnzhōng|||||minute|
+1|高兴|gāoxìng|||||happy, glad|
+1|歌|gē|||||song|
+1|哥哥|gēge|||||older brother|
+1|个|gè|||||measure word for general objects|
+1|给|gěi|||||to give; (to, for)|
+1|公司|gōngsī|||||company|
+1|工作|gōngzuò|||||work; to work|
+1|狗|gǒu|||||dog|
+1|贵|guì|||||expensive|
+1|国|guó|||||country|
+1|还|hái|||||still, also; quite|
+1|孩子|háizi|||||child|
+1|汉语|Hànyǔ|||||Chinese language|
+1|汉字|Hànzì|||||Chinese character|
+1|好|hǎo|||||good; (well); (to be fond of)|
+1|好吃|hǎochī|||||delicious, tasty|
+1|好看|hǎokàn|||||good-looking|
+1|好听|hǎotīng|||||pleasant to listen to|
+1|好玩儿|hǎowánr|||||fun, amusing|
+1|号|hào|||||number; measure word for people, items|
+1|喝|hē|||||to drink|
+1|和|hé|||||and, with|
+1|很|hěn|||||very|
+1|后|hòu|||||behind, later|
+1|回|huí|||||to return; (measure word for times)|
+1|会|huì|||||can, to be able to|
+1|火车|huǒchē|||||train|
+1|鸡蛋|jīdàn|||||egg|
+1|几|jǐ|||||how many, a few|
+1|家|jiā|||||home, family; measure word for families; (suffix indicating a person specializing in something)|
+1|家人|jiārén|||||family member|
+1|见|jiàn|||||to see|
+1|件|jiàn|||||measure word for items|
+1|饺子|jiǎozi|||||dumpling|
+1|叫|jiào|||||to be called, to call; to make; (by)|
+1|姐姐|jiějie|||||older sister|
+1|今年|jīnnián|||||this year|
+1|今天|jīntiān|||||today|
+1|九|jiǔ|||||nine|
+1|觉得|juéde|считать, чувствовать|我觉得这个很好。|Wǒ juéde zhège hěn hǎo.|Мне кажется, это очень хорошо.|to feel, to think|
+1|开|kāi|||||to open|
+1|开车|kāichē|||||to drive|
+1|看|kàn|||||to see, to look|
+1|看病|kànbìng|||||to see a doctor|
+1|看见|kànjiàn|||||to see|
+1|可以|kěyǐ|||||can, may; okay, fine|
+1|课|kè|||||class, lesson|
+1|又|kǒu|||||mouth; measure word for family members, bites|
+1|块|kuài|||||measure word for pieces, chunks, money|
+1|来|lái|||||to come|
+1|老师|lǎoshī|||||teacher|
+1|了|le|||||particle indicating completed action or change of state|
+1|冷|lěng|||||cold|
+1|里|lǐ|||||inside, in, mile|
+1|两|liǎng|||||two|
+1|零|líng|||||zero|
+1|六|liù|||||six|
+1|妈妈|māma|||||mom|
+1|吗|ma|||||question particle|
+1|买|mǎi|||||to buy|
+1|卖|mài|||||to sell|
+1|忙|máng|||||busy; to be busy|
+1|猫|māo|||||cat|
+1|没关系|méi guānxi|||||never mind, it's okay|
+1|没事|méishì|||||to have nothing to do, it doesn't matter|
+1|没有|méiyǒu|||||to not have; have not|
+1|妹妹|mèimei|||||younger sister|
+1|们|men|||||plural suffix for pronouns and nouns|
+1|米饭|mǐfàn|||||cooked rice|
+1|面包|miànbāo|||||bread|
+1|面条儿|miàntiáor|||||noodles|
+1|明年|míngnián|||||next year|
+1|明天|míngtiān|завтра|明天我们去北京。|Míngtiān wǒmen qù Běijīng.|Завтра мы едем в Пекин.|tomorrow|
+1|名字|míngzi|||||name|
+1|哪|nǎ|||||which|
+1|哪个|nǎge|||||which one|
+1|哪里|nǎlǐ|||||where|
+1|哪儿|nǎr|||||where|
+1|哪些|nǎxiē|||||which ones|
+1|那|nà|||||that; (then)|
+1|那边|nàbiān|||||over there|
+1|那个|nàge|||||that one|
+1|那里|nàlǐ|||||there|
+1|那儿|nàr|||||there|
+1|那些|nàxiē|||||those|
+1|男|nán|||||male|
+1|男朋友|nánpéngyou|||||boyfriend|
+1|呢|ne|||||question or continuation particle|
+1|能|néng|||||can, be able to|
+1|你|nǐ|||||you|
+1|你好|nǐ hǎo|привет|你好！很高兴认识你。|Nǐ hǎo! Hěn gāoxìng rènshi nǐ.|Привет! Рад познакомиться.|hello|
+1|你们|nǐmen|||||you plural|
+1|年|nián|||||year; measure word for years|
+1|您|nín|||||you|
+1|牛奶|niúnǎi|||||milk|
+1|女|nǚ|||||female|
+1|女儿|nǚ’ér|||||daughter|
+1|女朋友|nǚpéngyou|||||girlfriend|
+1|女士|nǚshì|||||lady, Ms.|
+1|朋友|péngyou|друг|他是我的好朋友。|Tā shì wǒ de hǎo péngyou.|Он мой хороший друг.|friend|
+1|便宜|piányi|||||cheap|
+1|漂亮|piàoliang|||||beautiful|
+1|苹果|píngguǒ|||||apple|
+1|七|qī|||||seven|
+1|起床|qǐchuáng|||||to get up|
+1|千|qiān|||||thousand|
+1|前|qián|||||front, before|
+1|钱|qián|||||money|
+1|请|qǐng|||||please|
+1|请问|qǐngwèn|||||may I ask|
+1|去|qù|||||to go|
+1|去年|qùnián|||||last year|
+1|热|rè|||||hot|
+1|人|rén|||||person|
+1|认识|rènshi|||||to know, to recognize|
+1|日|rì|||||measure word for days; (sun)|
+1|三|sān|||||three|
+1|商店|shāngdiàn|||||store, shop|
+1|上|shàng|||||up, above; to go up|
+1|上班|shàngbān|||||to go to work|
+1|上课|shàngkè|||||to attend class|
+1|上午|shàngwǔ|||||morning|
+1|上学|shàngxué|||||to go to school|
+1|少|shǎo|||||few, little; to lack|
+1|谁|shéi/shuí|||||who|
+1|什么|shénme|||||what|
+1|生病|shēngbìng|||||to get sick|
+1|十|shí|||||ten|
+1|时候|shíhou|||||moment, time|
+1|时间|shíjiān|||||time|
+1|事|shì|||||matter, thing|
+1|是|shì|||||to be|
+1|手机|shǒujī|||||cell phone|
+1|书|shū|||||book|
+1|书店|shūdiàn|||||bookstore|
+1|水|shuǐ|||||water|
+1|水果|shuǐguǒ|||||fruit|
+1|睡|shuì|||||to sleep|
+1|睡觉|shuìjiào|||||to sleep|
+1|说|shuō|||||to speak, to say|
+1|说话|shuōhuà|||||to talk|
+1|四|sì|||||four|
+1|岁|suì|||||measure word for age|
+1|他|tā|||||he, him|
+1|它|tā|||||it|
+1|她|tā|||||she|
+1|他们|tāmen|||||they|
+1|它们|tāmen|||||they|
+1|她们|tāmen|||||they|
+1|太|tài|||||too, extremely|
+1|天|tiān|||||day; measure word for days|
+1|天气|tiānqì|||||weather|
+1|听|tīng|||||to listen|
+1|听见|tīngjiàn|||||to hear|
+1|同学|tóngxué|||||classmate|
+1|外|wài|||||outside, exterior|
+1|外边|wàibian|||||outside|
+1|玩|wán|||||to play|
+1|晚|wǎn|||||late|
+1|晚饭|wǎnfàn|||||dinner|
+1|晚上|wǎnshang|||||evening|
+1|喂|wèi|||||hello used when answering the phone)|
+1|问|wèn|||||to ask|
+1|问题|wèntí|||||question|
+1|我|wǒ|||||I|
+1|我们|wǒmen|||||we|
+1|五|wǔ|||||five|
+1|午饭|wǔfàn|||||lunch|
+1|喜欢|xǐhuan|нравиться, любить|我喜欢喝茶。|Wǒ xǐhuan hē chá.|Я люблю пить чай.|to like|
+1|下|xià|||||down, below; to go down; measure word for times|
+1|下雨|xià yǔ|||||to rain|
+1|下班|xiàbān|||||to get off work|
+1|下课|xiàkè|||||to finish class|
+1|下午|xiàwǔ|||||afternoon|
+1|先生|xiānsheng|||||Mr., husband|
+1|现在|xiànzài|сейчас|现在几点？|Xiànzài jǐ diǎn?|Который сейчас час?|now|
+1|想|xiǎng|||||to think; to want|
+1|小|xiǎo|||||small; prefix indicating small size or endearment|
+1|小朋友|xiǎopéngyǒu|||||little friend, child|
+1|小时|xiǎoshí|||||hour|
+1|小学|xiǎoxué|||||primary school|
+1|小学生|xiǎoxuéshēng|||||primary school student|
+1|些|xiē|||||measure word for an indefinite amount|
+1|写|xiě|||||to write|
+1|谢谢|xièxie|спасибо|谢谢你的帮助。|Xièxie nǐ de bāngzhù.|Спасибо за помощь.|to thank|
+1|新|xīn|||||new|
+1|星期|xīngqī|||||week|
+1|星期日|xīngqīrì|||||Sunday|
+1|星期天|xīngqītiān|||||Sunday|
+1|休息|xiūxi|||||to rest|
+1|学|xué|||||to learn, to study|
+1|学生|xuéshēng|||||student|
+1|学习|xuéxí|учиться|我每天学习汉语。|Wǒ měitiān xuéxí Hànyǔ.|Я каждый день учу китайский.|to study|
+1|学校|xuéxiào|||||school|
+1|雪|xuě|||||snow|
+1|要|yào|||||to want, to need|
+1|也|yě|||||also, too|
+1|一|yī|||||one|
+1|衣服|yīfu|||||clothes|
+1|医生|yīshēng|||||doctor|
+1|医院|yīyuàn|||||hospital|
+1|一半|yíbàn|||||half|
+1|一下|yíxià|||||once, a little; (in a short while)|
+1|椅子|yǐzi|||||chair|
+1|一点儿|yìdiǎnr|||||a little, a bit|
+1|一些|yìxiē|||||some, a few|
+1|有|yǒu|||||to have, to exist|
+1|有的|yǒude|||||some of them|
+1|有点儿|yǒudiǎnr|||||a little, slightly|
+1|有些|yǒuxiē|||||some, some of; (somewhat, rather)|
+1|雨|yǔ|||||rain|
+1|元|yuán|||||yuan|
+1|月|yuè|||||month; moon|
+1|再|zài|||||again, then|
+1|在|zài|||||to be at; at; in the middle of|
+1|再见|zàijiàn|||||goodbye|
+1|早|zǎo|||||early|
+1|早饭|zǎofàn|||||breakfast|
+1|早上|zǎoshang|||||morning|
+1|怎么|zěnme|||||how|
+1|怎么样|zěnmeyàng|||||how about, what do you think|
+1|找|zhǎo|||||to look for|
+1|这|zhè|||||this|
+1|这边|zhèbiān|||||here|
+1|这个|zhège|||||this one|
+1|这里|zhèlǐ|||||here|
+1|这儿|zhèr|||||here|
+1|这些|zhèxiē|||||these|
+1|真|zhēn|||||really; (true)|
+1|正在|zhèngzài|||||in the process of|
+1|只|zhī|||||measure word for animals, one of a pair|
+1|知道|zhīdào|||||to know|
+1|中国|Zhōngguó|||||China|
+1|中文|Zhōngwén|||||Chinese language|
+1|中午|zhōngwǔ|||||noon|
+1|中学|zhōngxué|||||middle school|
+1|中学生|zhōngxuéshēng|||||middle school student|
+1|住|zhù|||||to live, to reside|
+1|桌子|zhuōzi|||||table, desk|
+1|字|zì|||||character, script|
+1|昨天|zuótiān|||||yesterday|
+1|坐|zuò|||||to sit|
+1|做|zuò|||||to do, to make|
+1|做饭|zuò fàn|||||to cook|
+2|啊|a|||||ah, oh|
+2|爱好|àihào|||||to like; hobby|
+2|白色|báisè|||||white|
+2|班|bān|||||class, team; (measure word for groups)|
+2|帮|bāng|||||to help|
+2|帮忙|bāngmáng|||||to help|
+2|包|bāo|||||to wrap, to pack; bag; measure word for bundles|
+2|本子|běnzi|||||notebook|
+2|比|bǐ|||||to compare; than|
+2|笔|bǐ|||||pen; (measure word for writing tools)|
+2|别|bié|||||don't, not bad|
+2|不错|búcuò|||||not bad, pretty good|
+2|不好意思|bù hǎoyìsi|||||sorry, embarrassed|
+2|长|cháng|||||long|
+2|车站|chēzhàn|||||station|
+2|出|chū|||||to go out, to leave|
+2|出国|chūguó|||||to go abroad|
+2|出来|chūlái|||||to come out|
+2|出门|chūmén|||||to go out|
+2|出去|chūqù|||||to go out|
+2|床|chuáng|||||bed|
+2|词|cí|||||word, term|
+2|次|cì|||||measure word of time or occasion; (next in order)|
+2|从|cóng|||||from; (ever)|
+2|从小|cóngxiǎo|||||from childhood|
+2|错|cuò|||||wrong, mistaken|
+2|打|dǎ|||||to hit, to play, to make|
+2|打车|dǎchē|||||to take a taxi|
+2|打开|dǎkāi|||||to open|
+2|但|dàn|||||but, however; (only, merely)|
+2|但是|dànshì|||||but, however|
+2|得|de|||||particle indicating degree or manner|
+2|地|de|||||particle modifying an adjective into an adverb|
+2|等|děng|||||to wait; (and so on, until)|
+2|地铁|dìtiě|||||subway, metro|
+2|点|diǎn|||||to light, to ignite; (point, dot; to order)|点#2
+2|懂|dǒng|||||to understand|
+2|动|dòng|||||to move, to act|
+2|饭馆|fànguǎn|||||restaurant|
+2|飞|fēi|||||to fly|
+2|高|gāo|||||tall, high; height|
+2|高中|gāozhōng|||||high school|
+2|告诉|gàosu|сказать, сообщить|请告诉我你的名字。|Qǐng gàosu wǒ nǐ de míngzi.|Скажите, пожалуйста, ваше имя.|to tell|
+2|个子|gèzi|||||height, stature|
+2|跟|gēn|||||with; and; (heel; to follow, to accompany)|
+2|公交车|gōngjiāochē|||||bus|
+2|过|guò|||||to pass, to cross; excessive|
+2|过来|guòlái|||||to come over|
+2|过年|guònián|||||to celebrate the New Year|
+2|过去|guòqù|||||to go over|
+2|过|guo|||||particle indicating past experience|过#2
+2|还是|háishi|||||still; or|
+2|黑色|hēisè|||||black|
+2|红茶|hóngchá|||||black tea|
+2|红色|hóngsè|||||red|
+2|后面|hòumiàn|||||behind, back|
+2|花|huā|||||to spend (money or time)|
+2|花2|huā|||||flower; (colorful)|
+2|画|huà|||||to draw, to paint; painting, picture|
+2|坏|huài|||||bad, broken|
+2|回来|huílái|||||to come back|
+2|回去|huíqù|||||to go back|
+2|机场|jīchǎng|||||airport|
+2|机票|jīpiào|||||airplane ticket|
+2|记得|jìde|||||to remember|
+2|间|jiān|||||measure word for rooms; between|
+2|教|jiāo|||||to teach|
+2|教室|jiàoshì|||||classroom|
+2|介绍|jièshào|||||to introduce|
+2|进|jìn|||||to enter|
+2|近|jìn|||||near, close|
+2|进来|jìnlái|||||to come in|
+2|进去|jìnqù|||||to go in|
+2|经常|jīngcháng|||||often|
+2|酒店|jiǔdiàn|||||hotel|
+2|就|jiù|||||just, then; (as early as, only, as soon as)|
+2|咖啡|kāfēi|||||coffee|
+2|开始|kāishǐ|||||to start; beginning|
+2|开学|kāixué|||||school starts|
+2|考|kǎo|||||to test, to take an exam|
+2|考试|kǎoshì|||||to take an exam; exam|
+2|可能|kěnéng|||||possible; possibility; may|
+2|裤子|kùzi|||||pants|
+2|快|kuài|||||fast; soon, quickly|
+2|快乐|kuàilè|||||happy, joyful|
+2|快要|kuàiyào|||||soon, almost|
+2|篮球|lánqiú|||||basketball|
+2|累|lèi|||||tired; to tire|
+2|离|lí|||||to leave, to be away from|
+2|里面|lǐmiàn|||||inside|
+2|楼|lóu|||||building, floor|
+2|路|lù|||||road, path|
+2|路上|lùshang|||||on the road|
+2|旅游|lǚyóu|||||to travel|
+2|绿茶|lǜchá|||||green tea|
+2|绿色|lǜsè|||||green color; (green)|
+2|慢|màn|||||slow|
+2|没意思|méi yìsi|||||boring, uninteresting|
+2|每|měi|||||every, each; (per)|
+2|门|mén|||||door, gate|
+2|门又|ménkǒu|||||doorway, entrance|
+2|门票|ménpiào|||||ticket|
+2|面|miàn|||||suffix indicating a person with a certain characteristic; (to face; side, aspect; measure word for flat objects)|
+2|名|míng|||||name, reputation; measure word for people|
+2|拿|ná|||||to take, to hold|
+2|那么|nàme|||||so, like that; then|
+2|那样|nàyàng|||||like that|
+2|奶茶|nǎichá|||||milk tea|
+2|奶奶|nǎinai|||||grandmother|
+2|男孩儿|nánháir|||||boy|
+2|鸟|niǎo|||||bird|
+2|女孩儿|nǚháir|||||girl|
+2|旁边|pángbiān|||||side|
+2|跑|pǎo|||||to run|
+2|跑步|pǎobù|||||to run, jogging|
+2|票|piào|||||ticket|
+2|妻子|qīzi|||||wife|
+2|起来|qǐlái|||||to get up, to stand up; used after verbs to indicate upward movement or beginning|
+2|前面|qiánmiàn|||||front|
+2|晴|qíng|||||sunny, clear|
+2|球|qiú|||||ball, sphere|
+2|让|ràng|||||to let, to allow; (by)|
+2|肉|ròu|||||meat|
+2|商场|shāngchǎng|||||shopping mall|
+2|上来|shànglái|||||to come up|
+2|上面|shàngmiàn|||||above, top|
+2|上去|shàngqù|||||to go up|
+2|上网|shàngwǎng|||||to go online, to surf the Internet|
+2|身体|shēntǐ|||||body|
+2|生日|shēngrì|||||birthday|
+2|时|shí|||||time, moment; (season, period)|
+2|事情|shìqing|||||matter, affair|
+2|手|shǒu|||||hand|
+2|手表|shǒubiǎo|||||watch, wristwatch|
+2|书包|shūbāo|||||backpack, schoolbag|
+2|舒服|shūfu|||||comfortable|
+2|送|sòng|||||to give, to send, to see off|
+2|虽然|suīrán|||||although|
+2|所以|suǒyǐ|||||so, therefore|
+2|疼|téng|||||painful, sore; (to hurt)|
+2|踢|tī|||||to kick|
+2|题|tí|||||question, problem, topic|
+2|条|tiáo|||||measure word for long, thin, or strip-like objects; (clause, item)|
+2|跳舞|tiàowǔ|||||to dance|
+2|头|tóu|||||head; (measure word for animals); (first)|
+2|外国|wàiguó|||||foreign country|
+2|外面|wàimiàn|снаружи|外面在下雨。|Wàimiàn zài xià yǔ.|На улице идёт дождь.|outside|
+2|完|wán|||||to finish|
+2|万|wàn|||||ten thousand|
+2|往|wǎng|||||to go; toward|
+2|网上|wǎngshang|||||online|
+2|忘|wàng|||||to forget|
+2|位|wèi|||||measure word for people|
+2|为什么|wèi shénme|почему|你为什么学汉语？|Nǐ wèishénme xué Hànyǔ?|Почему ты учишь китайский?|why|
+2|希望|xīwàng|||||to hope|
+2|洗|xǐ|||||to wash|
+2|洗手间|xǐshǒujiān|||||restroom, toilet|
+2|下来|xiàlái|||||to come down|
+2|下面|xiàmiàn|||||below, under|
+2|下去|xiàqù|||||to go down|
+2|小孩儿|xiǎoháir|||||child, little kid|
+2|小时候|xiǎoshíhou|||||childhood|
+2|笑|xiào|||||to laugh, to smile|
+2|姓|xìng|||||surname; to be surnamed|
+2|姓名|xìngmíng|||||full name|
+2|颜色|yánsè|||||color|
+2|眼睛|yǎnjing|||||eye|
+2|药|yào|||||medicine, drug|
+2|药店|yàodiàn|||||pharmacy|
+2|爷爷|yéye|||||grandfather|
+2|一会儿|yíhuìr|||||a while, a moment; (soon, in a little while)|
+2|已经|yǐjīng|уже|他已经走了。|Tā yǐjīng zǒu le.|Он уже ушёл.|already|
+2|一起|yìqǐ|вместе|我们一起去吧。|Wǒmen yìqǐ qù ba.|Пойдёмте вместе.|together|
+2|意思|yìsi|значение, смысл|这个词是什么意思？|Zhège cí shì shénme yìsi?|Что значит это слово?|meaning, idea|
+2|阴|yīn|||||cloudy|
+2|因为|yīnwèi|||||because; because of|
+2|游|yóu|||||to swim|
+2|游泳|yóuyǒng|||||to swim|
+2|有意思|yǒu yìsi|||||interesting, enjoyable|
+2|有时|yǒushí|||||sometimes|
+2|右|yòu|||||right|
+2|右边|yòubian|||||right side|
+2|鱼|yú|||||fish|
+2|远|yuǎn|||||far|
+2|运动|yùndòng|||||to move, to exercise; sports, exercise|
+2|站|zhàn|||||station, stop; to stand|
+2|丈夫|zhàngfu|||||husband|
+2|这么|zhème|||||so, such, like this|
+2|这样|zhèyàng|||||like this, so|
+2|着|zhe|||||particle indicating ongoing action or state|
+2|正|zhèng|||||just, exactly, right; (straight)|
+2|周|zhōu|||||week; (measure word for circumference, cycle)|
+2|准备|zhǔnbèi|готовиться|我在准备考试。|Wǒ zài zhǔnbèi kǎoshì.|Я готовлюсь к экзамену.|to prepare|
+2|自己|zìjǐ|||||oneself|
+2|走|zǒu|||||to walk|
+2|走路|zǒulù|||||to walk|
+2|足球|zúqiú|||||soccer, football|
+2|最|zuì|||||most, -est|
+2|左|zuǒ|||||left|
+2|左边|zuǒbian|||||left side|
+3|阿姨|āyí|||||aunt|
+3|矮|ǎi|||||short|
+3|爱人|àiren|||||spouse|
+3|安静|ānjìng|||||quiet|
+3|安全|ānquán|||||safe|
+3|把|bǎ|||||measure word for objects with handles; particle for object-fronting|
+3|搬|bān|||||to move, to carry|
+3|班级|bānjí|||||class, grade|
+3|搬家|bānjiā|||||to move house|
+3|办|bàn|||||to do, to handle|
+3|办法|bànfǎ|||||way, solution|
+3|办公室|bàngōngshì|||||office|
+3|半天|bàntiān|||||half a day, a long time|
+3|帮助|bāngzhù|помогать, помощь|他常常帮助别人。|Tā chángcháng bāngzhù biérén.|Он часто помогает другим.|help|
+3|饱|bǎo|||||full|
+3|报纸|bàozhǐ|||||newspaper|
+3|北|běi|||||north|
+3|北方|běifāng|||||north|
+3|被|bèi|||||by|
+3|笔记|bǐjì|||||notes|
+3|比较|bǐjiào|сравнительно, довольно|今天比较冷。|Jīntiān bǐjiào lěng.|Сегодня довольно холодно.|to compare; quite, relatively; than|
+3|笔记本|bǐjìběn|||||notebook|
+3|比如|bǐrú|||||for example|
+3|比赛|bǐsài|||||to compete; game, match|
+3|必须|bìxū|||||must|
+3|变|biàn|||||to change, to become|
+3|遍|biàn|||||measure word for actions|
+3|变成|biànchéng|||||to become, to turn into|
+3|变化|biànhuà|||||to change; change|
+3|表演|biǎoyǎn|||||to perform, to act|
+3|别的|biéde|||||other|
+3|别人|biérén|||||other people|
+3|宾馆|bīnguǎn|||||hotel|
+3|冰|bīng|||||ice; (to freeze)|
+3|冰激凌|bīngjīlíng|||||ice cream|
+3|冰箱|bīngxiāng|||||refrigerator|
+3|病人|bìngrén|||||patient|
+3|不但|búdàn|||||not only|
+3|不见|bújiàn|||||to disappear, to not see|
+3|不用|búyòng|||||need not|
+3|不同|bù tóng|||||different|
+3|不久|bùjiǔ|||||soon, not long after|
+3|不行|bùxíng|||||not allowed, won't do; not good|
+3|才|cái|||||just, only|
+3|菜单|càidān|||||menu|
+3|参加|cānjiā|||||to join, to attend|
+3|草|cǎo|||||grass|
+3|草地|cǎodì|||||grassland|
+3|层|céng|||||measure word for layer, floor|
+3|查|chá|||||to check|
+3|差|chà|||||bad, poor; to lack|
+3|差不多|chàbuduō|||||almost, similar; nearly|
+3|尝|cháng|||||to taste|
+3|常|cháng|||||often, frequent|
+3|常见|cháng jiàn|||||common|
+3|常用|cháng yòng|||||commonly used|
+3|常常|chángcháng|||||often|
+3|衬衫|chènshān|||||shirt|
+3|成绩|chéngjì|||||score, grade, achievement|
+3|城市|chéngshì|||||city|
+3|迟到|chídào|||||to be late|
+3|出发|chūfā|||||to set out, to leave|
+3|出生|chūshēng|||||to be born|
+3|出院|chūyuàn|||||to be discharged from hospital|
+3|初中|chūzhōng|||||junior high school|
+3|除了|chúle|||||except, besides|
+3|船|chuán|||||boat|
+3|春天|chūntiān|||||spring|
+3|词典|cídiǎn|||||dictionary|
+3|聪明|cōngmíng|||||smart, clever|
+3|打扫|dǎsǎo|||||to clean|
+3|打算|dǎsuàn|||||to plan, intend; plan|
+3|大概|dàgài|||||general, rough; probably, approximately; (general idea)|
+3|大人|dàren|||||adult|
+3|大小|dàxiǎo|||||size|
+3|大熊猫|dàxióngmāo|||||giant panda|
+3|大衣|dàyī|||||coat|
+3|带|dài|||||to bring, to take; (belt)|
+3|担心|dānxīn|волноваться|别担心，没问题。|Bié dānxīn, méi wèntí.|Не волнуйся, нет проблем.|to worry|
+3|蛋糕|dàngāo|||||cake|
+3|当然|dāngrán|||||of course|
+3|到处|dàochù|||||everywhere|
+3|得|dé|||||to get, to obtain|得#2
+3|得到|dédào|||||to get, to obtain|
+3|得分|défēn|||||to score; score|
+3|的话|dehuà|||||particle used after a condition clause, if...|
+3|得|děi|||||must, need|得#3
+3|灯|dēng|||||lamp, light|
+3|地|dì|||||ground, earth, land|地#2
+3|地点|dìdiǎn|||||place, location|
+3|地方|dìfang|||||place|
+3|地图|dìtú|||||map|
+3|电|diàn|||||electricity; (to give an electric shock)|
+3|电梯|diàntī|||||elevator|
+3|电子书|diànzǐshū|||||e-book|
+3|丢|diū|||||to lose, to throw away|
+3|东|dōng|||||east|
+3|东北|dōngběi|||||northeast|
+3|东方|dōngfāng|||||east|
+3|东南|dōngnán|||||southeast|
+3|冬天|dōngtiān|||||winter|
+3|懂得|dǒngde|||||to understand|
+3|动物|dòngwù|||||animal|
+3|动物园|dòngwùyuán|||||zoo|
+3|短|duǎn|||||short|
+3|短裤|duǎnkù|||||shorts|
+3|段|duàn|||||measure word of segment, paragraph|
+3|锻炼|duànliàn|||||to exercise|
+3|对话|duìhuà|||||dialogue, conversation|
+3|饿|è|||||hungry|
+3|而且|érqiě|||||and, moreover|
+3|耳朵|ěrduo|||||ear|
+3|耳机|ěrjī|||||earphone|
+3|发|fā|||||to send, to issue|
+3|发烧|fāshāo|||||to have a fever|
+3|发生|fāshēng|||||to happen|
+3|发现|fāxiàn|||||to find, to discover|
+3|发展|fāzhǎn|развитие, развиваться|中国发展得很快。|Zhōngguó fāzhǎn de hěn kuài.|Китай развивается очень быстро.|to develop|
+3|方便|fāngbiàn|||||convenient|
+3|方便面|fāngbiànmiàn|||||instant noodles|
+3|方法|fāngfǎ|||||method|
+3|方向|fāngxiàng|||||direction|
+3|房子|fángzi|||||house|
+3|放|fàng|||||to put, to place|
+3|放假|fàngjià|||||to have a holiday|
+3|放心|fàngxīn|||||to relax, to feel at ease|
+3|放学|fàngxué|||||school is over|
+3|分开|fēnkāi|||||to separate|
+3|风|fēng|||||wind|
+3|封|fēng|||||measure word for letters; (to seal)|
+3|夫妻|fūqī|||||husband and wife|
+3|服务|fúwù|||||to serve|
+3|附近|fùjìn|поблизости|附近有一家银行。|Fùjìn yǒu yì jiā yínháng.|Поблизости есть банк.|nearby|
+3|复习|fùxí|повторять (материал)|考试前要复习。|Kǎoshì qián yào fùxí.|Перед экзаменом нужно повторять.|to review|
+3|该|gāi|||||should|
+3|干净|gānjìng|||||clean|
+3|感兴趣|gǎn xìngqù|||||to be interested in|
+3|感到|gǎndào|||||to feel|
+3|感冒|gǎnmào|||||cold; to catch a cold|
+3|干|gàn|||||to do, to work|
+3|刚|gāng|||||just, just now|
+3|刚才|gāngcái|||||just now|
+3|刚刚|gānggāng|||||just now, a moment ago|
+3|高铁|gāotiě|||||high-speed rail|
+3|根据|gēnjù|||||to base on; according to; (basis)|
+3|更|gèng|||||more|
+3|公斤|gōngjīn|||||kilogram|
+3|公园|gōngyuán|||||park|
+3|工作日|gōngzuòrì|||||workday|
+3|故事|gùshi|||||story|
+3|刮|guā|||||to scrape, to blow|
+3|关|guān|||||to close, to turn off; pass|
+3|关机|guānjī|||||to turn off device|
+3|关系|guānxì|||||relationship; (to relate)|
+3|关心|guānxīn|||||to care about, to be concerned|
+3|关于|guānyú|||||about, regarding|
+3|关注|guānzhù|||||to pay attention to, to follow|
+3|国家|guójiā|||||country|
+3|过节|guòjié|||||to celebrate a festival|
+3|过去|guòqù|||||past|过去#2
+3|海|hǎi|||||sea|
+3|害怕|hàipà|||||to be afraid|
+3|好多|hǎoduō|||||many, a lot|
+3|好久|hǎojiǔ|||||a long time|
+3|好像|hǎoxiàng|||||to seem, as if; perhaps|
+3|号码|hàomǎ|||||number, code|
+3|河|hé|||||river|
+3|合适|héshì|||||suitable|
+3|黑板|hēibǎn|||||blackboard|
+3|红绿灯|hóng-lǜdēng|||||traffic light|
+3|后来|hòulái|||||later, afterwards|
+3|后年|hòunián|||||the year after next|
+3|后天|hòutiān|||||the day after tomorrow|
+3|护照|hùzhào|||||passport|
+3|花园|huāyuán|||||garden|
+3|画家|huàjiā|||||painter, artist|
+3|欢迎|huānyíng|||||to welcome|
+3|还|huán|||||to return, to give back|还#2
+3|环境|huánjìng|||||environment|
+3|换|huàn|||||to exchange, to change|
+3|黄色|huángsè|||||yellow|
+3|回答|huídá|||||to answer|
+3|会|huì|||||meeting|会#2
+3|会议|huìyì|||||meeting|
+3|或|huò|||||or; (perhaps, maybe)|
+3|或者|huòzhě|||||or|
+3|鸡|jī|||||chicken|
+3|几乎|jīhū|||||almost|
+3|机会|jīhuì|||||opportunity|
+3|极|jí|||||extremely|
+3|急|jí|||||urgent; (to worry)|
+3|记|jì|||||to remember|
+3|季|jì|||||season|
+3|季节|jìjié|||||season|
+3|加|jiā|||||to add|
+3|假期|jiàqī|||||vacation|
+3|坚持|jiānchí|упорно продолжать|只要坚持，就会成功。|Zhǐyào jiānchí, jiù huì chénggōng.|Если упорно продолжать, добьёшься успеха.|to persist|
+3|检查|jiǎnchá|||||to check, to inspect|
+3|简单|jiǎndān|||||simple|
+3|检票|jiǎnpiào|||||ticket checking|
+3|健康|jiànkāng|||||healthy|
+3|见面|jiànmiàn|||||to meet|
+3|讲|jiǎng|||||to speak, to talk|
+3|角|jiǎo|||||measure word for fractions, angle, currency|
+3|脚|jiǎo|||||foot|
+3|接|jiē|||||to pick up, to receive|
+3|街|jiē|||||street|
+3|节|jié|||||measure word for segments, sections, lessons; festival, joint; (to save, to control)|
+3|结婚|jiéhūn|||||to marry|
+3|节目|jiémù|||||program|
+3|节日|jiérì|||||festival|
+3|结束|jiéshù|||||to end|
+3|解决|jiějué|||||to solve|
+3|姐妹|jiěmèi|||||sister|
+3|借|jiè|||||to borrow|
+3|斤|jīn|||||catty|
+3|经过|jīngguò|||||to pass; process|
+3|经理|jīnglǐ|||||manager|
+3|久|jiǔ|||||long|
+3|酒|jiǔ|||||alcohol|
+3|旧|jiù|||||old|
+3|句|jù|||||measure word of sentence|
+3|句子|jùzi|||||sentence|
+3|决定|juédìng|||||to decide; decision|
+3|卡|kǎ|||||card|
+3|开花|kāihuā|||||to bloom|
+3|开会|kāihuì|||||to have a meeting|
+3|开机|kāijī|||||to turn on device|
+3|开心|kāixīn|||||happy|
+3|看来|kànlái|||||it seems, it appears|
+3|可|kě|||||but; (yet)|
+3|渴|kě|||||thirsty|
+3|可爱|kě’ài|||||lovely|
+3|可是|kěshì|||||but|
+3|刻|kè|||||quarter; to carve|
+3|课本|kèběn|||||textbook|
+3|客人|kèrén|||||guest|
+3|课文|kèwén|||||text|
+3|空调|kōngtiáo|||||air conditioner|
+3|哭|kū|||||to cry|
+3|筷子|kuàizi|||||chopsticks|
+3|矿泉水|kuàngquánshuǐ|||||mineral water|
+3|来自|láizì|||||to come from|
+3|蓝|lán|||||blue|
+3|老|lǎo|||||old, aged; prefix indicating seniority or endearment; (always, constantly)|
+3|老人|lǎorén|||||elderly person|
+3|离开|líkāi|||||to leave|
+3|礼物|lǐwù|||||gift|
+3|历史|lìshǐ|||||history|
+3|脸|liǎn|||||face|
+3|练|liàn|||||to practice|
+3|练习|liànxí|||||to practice; exercise|
+3|凉快|liángkuai|||||cool|
+3|辆|liàng|||||measure word for vehicles|
+3|聊|liáo|||||to chat|
+3|聊天儿|liáotiānr|||||to chat|
+3|了解|liǎojiě|||||to understand|
+3|邻居|línjū|||||neighbor|
+3|留学|liúxué|||||to study abroad|
+3|留学生|liúxuéshēng|||||overseas student|
+3|楼梯|lóutī|||||stairs|
+3|路边|lùbiān|||||roadside|
+3|路又|lùkǒu|||||intersection|
+3|马|mǎ|||||horse|
+3|马路|mǎlù|||||road|
+3|马上|mǎshàng|||||immediately|
+3|满意|mǎnyì|||||satisfied|
+3|毛|máo|||||measure word for money; (hair)|
+3|米|mǐ|||||meter|
+3|面前|miànqián|||||in front of|
+3|明白|míngbai|||||to understand; clear|
+3|名单|míngdān|||||name list|
+3|名人|míngrén|||||famous person|
+3|南|nán|||||south|
+3|难|nán|||||difficult; (to make difficult)|
+3|南方|nánfāng|||||south|
+3|难过|nánguò|||||sad|
+3|难看|nánkàn|||||ugly|
+3|男人|nánrén|||||man|
+3|男生|nánshēng|||||boy student|
+3|难题|nántí|||||difficult problem|
+3|难听|nántīng|||||unpleasant to hear|
+3|年级|niánjí|||||grade|
+3|年轻|niánqīng|||||young|
+3|牛|niú|||||cow; (awesome)|
+3|努力|nǔlì|||||to work hard; hardworking|
+3|女人|nǚrén|||||woman|
+3|女生|nǚshēng|||||girl student|
+3|爬|pá|||||to climb|
+3|怕|pà|||||to fear; (perhaps)|
+3|拍照|pāizhào|||||to take a photo|
+3|盘子|pánzi|||||plate|
+3|胖|pàng|||||fat|
+3|啤酒|píjiǔ|||||beer|
+3|平时|píngshí|||||usually|
+3|瓶子|píngzi|||||bottle|
+3|骑|qí|||||to ride|
+3|奇怪|qíguài|||||strange|
+3|其实|qíshí|на самом деле|其实这不难。|Qíshí zhè bù nán.|На самом деле это не сложно.|actually|
+3|其他|qítā|||||other|
+3|起|qǐ|||||to rise, to get up; (measure word for events)|
+3|起飞|qǐfēi|||||to take off|
+3|汽车|qìchē|||||car|
+3|铅笔|qiānbǐ|||||pencil|
+3|前年|qiánnián|||||the year before last|
+3|前天|qiántiān|||||the day before yesterday|
+3|清楚|qīngchu|ясный, чёткий|我听不清楚。|Wǒ tīng bù qīngchu.|Я плохо слышу.|clear, obvious; to understand|
+3|请假|qǐngjià|||||to ask for leave|
+3|请客|qǐngkè|||||to invite guests, to treat someone|
+3|秋天|qiūtiān|||||autumn|
+3|球场|qiúchǎng|||||sports field, court|
+3|裙子|qúnzi|||||skirt|
+3|然后|ránhòu|||||then, afterwards|
+3|热情|rèqíng|||||enthusiastic|
+3|认得|rènde|||||to recognize, to know|
+3|认为|rènwéi|||||to think, to consider|
+3|认真|rènzhēn|||||serious, earnest|
+3|容易|róngyì|лёгкий, легко|这个问题很容易。|Zhège wèntí hěn róngyì.|Этот вопрос очень лёгкий.|easy|
+3|如果|rúguǒ|||||if|
+3|伞|sǎn|||||umbrella|
+3|扫|sǎo|||||to sweep|
+3|沙发|shāfā|||||sofa|
+3|山|shān|||||mountain|
+3|上衣|shàngyī|||||jacket, top garment|
+3|勺子|sháozi|||||spoon|
+3|身边|shēnbiān|||||by one's side|
+3|身高|shēngāo|||||height|
+3|声|shēng|||||sound, voice; measure word for sounds|
+3|生活|shēnghuó|||||life; to live|
+3|生气|shēngqì|||||to get angry|
+3|声音|shēngyīn|||||sound|
+3|市|shì|||||city|
+3|试|shì|||||to try|
+3|室|shì|||||room|
+3|世界|shìjiè|||||world|
+3|收|shōu|||||to receive|
+3|收到|shōudào|||||to receive|
+3|受|shòu|||||to receive, to be affected|
+3|瘦|shòu|||||thin, slim|
+3|受到|shòudào|||||to receive, to be subjected to|
+3|叔叔|shūshu|||||uncle|
+3|树|shù|||||tree|
+3|数学|shùxué|||||mathematics|
+3|刷|shuā|||||to brush, to scrub|
+3|双|shuāng|||||pair, measure word for pairs|
+3|水平|shuǐpíng|||||level, standard|
+3|司机|sījī|||||driver|
+3|四季|sìjì|||||four seasons|
+3|太阳|tàiyáng|||||sun|
+3|糖|táng|||||candy, sugar|
+3|特别|tèbié|||||special; particularly|
+3|提高|tígāo|||||to raise, to improve|
+3|体育|tǐyù|||||physical education|
+3|体育馆|tǐyùguǎn|||||gymnasium|
+3|甜|tián|||||sweet|
+3|跳|tiào|||||to jump|
+3|听说|tīngshuō|||||to hear said|
+3|挺|tǐng|||||quite, rather; (to endure)|
+3|同事|tóngshì|||||colleague|
+3|同意|tóngyì|соглашаться|我同意你的看法。|Wǒ tóngyì nǐ de kànfǎ.|Я согласен с твоим мнением.|to agree|
+3|头发|tóufa|||||hair|
+3|突然|tūrán|||||sudden|
+3|图书馆|túshūguǎn|||||library|
+3|腿|tuǐ|||||leg|
+3|外地|wàidì|||||other place|
+3|外卖|wàimài|||||takeaway; to order takeout|
+3|外语|wàiyǔ|||||foreign language|
+3|完成|wánchéng|||||to complete|
+3|碗|wǎn|||||bowl|
+3|晚点|wǎndiǎn|||||to be late|
+3|晚会|wǎnhuì|||||evening party|
+3|网球|wǎngqiú|||||tennis|
+3|网站|wǎngzhàn|||||website|
+3|忘记|wàngjì|||||to forget|
+3|为|wèi|||||for, because of, to|
+3|为了|wèile|||||in order to|
+3|卫生间|wèishēngjiān|||||bathroom, restroom|
+3|文化|wénhuà|||||culture|
+3|屋子|wūzi|||||room, house|
+3|西|xī|||||west|
+3|西北|xīběi|||||northwest|
+3|西方|xīfāng|||||west|
+3|西瓜|xīguā|||||watermelon|
+3|西南|xīnán|||||southwest|
+3|习惯|xíguàn|привычка|早起是个好习惯。|Zǎo qǐ shì ge hǎo xíguàn.|Вставать рано — хорошая привычка.|to be used to; habit|
+3|喜爱|xǐ’ài|||||to like, to love|
+3|洗衣机|xǐyījī|||||washing machine|
+3|洗澡|xǐzǎo|||||to take a bath|
+3|夏天|xiàtiān|||||summer|
+3|先|xiān|||||first, before|
+3|香蕉|xiāngjiāo|||||banana|
+3|相信|xiāngxìn|||||to believe|
+3|箱子|xiāngzi|||||box, case|
+3|向|xiàng|||||to face, to turn toward; toward, to|
+3|像|xiàng|||||to resemble, to be like; (as if, such as); (image, statue, portrait)|
+3|相机|xiàngjī|||||camera|
+3|小区|xiǎoqū|||||residential community|
+3|小心|xiǎoxīn|||||to be careful; careful|
+3|校园|xiàoyuán|||||campus|
+3|校长|xiàozhǎng|||||principal, headmaster|
+3|鞋|xié|||||shoe|
+3|心里|xīnlǐ|||||heart, mind|
+3|新年|xīnnián|||||New Year|
+3|新闻|xīnwén|||||news|
+3|新鲜|xīnxiān|||||fresh|
+3|信|xìn|||||to believe; letter|
+3|信用卡|xìnyòngkǎ|||||credit card|
+3|行|xíng|||||to go; okay, permissible|
+3|行李|xíngli|||||luggage|
+3|兴趣|xìngqù|||||interest|
+3|休假|xiūjià|||||to take a holiday|
+3|需要|xūyào|||||to need; need|
+3|选|xuǎn|||||to choose|
+3|选择|xuǎnzé|выбирать, выбор|你选择哪个专业？|Nǐ xuǎnzé nǎge zhuānyè?|Какую специальность ты выбираешь?|to choose|
+3|学期|xuéqī|||||semester|
+3|牙|yá|||||tooth|
+3|牙刷|yáshuā|||||toothbrush|
+3|羊|yáng|||||sheep|
+3|养|yǎng|||||to raise, to keep|
+3|要求|yāoqiú|||||to demand; requirement|
+3|页|yè|||||measure word for page|
+3|一定|yídìng|||||certain; certainly|
+3|一共|yígòng|||||altogether, in total|
+3|一块儿|yíkuàir|||||the same place; together|
+3|一样|yíyàng|||||same|
+3|以后|yǐhòu|||||later, after|
+3|以前|yǐqián|||||before|
+3|以上|yǐshàng|||||above, more than|
+3|以外|yǐwài|||||except, besides|
+3|以为|yǐwéi|||||to think, to believe|
+3|以下|yǐxià|||||below, less than|
+3|一般|yìbān|||||general, ordinary|
+3|一边|yìbiān|||||at the same time|
+3|一直|yìzhí|||||always, straight|
+3|音乐|yīnyuè|||||music|
+3|银行|yínháng|||||bank|
+3|银行卡|yínhángkǎ|||||bank card|
+3|饮料|yǐnliào|||||beverage|
+3|应该|yīnggāi|||||should, ought to|
+3|影响|yǐngxiǎng|влиять, влияние|天气影响我的心情。|Tiānqì yǐngxiǎng wǒ de xīnqíng.|Погода влияет на моё настроение.|to affect; influence|
+3|用|yòng|||||to use|
+3|邮件|yóujiàn|||||mail|
+3|游客|yóukè|||||tourist|
+3|游戏|yóuxì|||||game|
+3|邮箱|yóuxiāng|||||mailbox|
+3|有关|yǒuguān|||||to have to do with; concerning|
+3|有名|yǒumíng|||||famous|
+3|有用|yǒuyòng|||||useful|
+3|又|yòu|||||again, also|又#2
+3|羽毛球|yǔmáoqiú|||||badminton|
+3|语言|yǔyán|||||language|
+3|雨衣|yǔyī|||||raincoat|
+3|遇到|yùdào|||||to encounter|
+3|遇见|yùjiàn|||||to meet|
+3|园|yuán|||||garden|
+3|员|yuán|||||suffix for person with a certain job|
+3|愿意|yuànyì|||||willing|
+3|越|yuè|||||more, increasingly|
+3|月亮|yuèliang|||||moon|
+3|运动会|yùndònghuì|||||sports meet|
+3|运动员|yùndòngyuán|||||athlete|
+3|咱们|zánmen|||||we|
+3|脏|zāng|||||dirty|
+3|怎么办|zěnme bàn|||||what to do|
+3|怎样|zěnyàng|||||how|
+3|站|zhàn|||||to stand; station|站#2
+3|张|zhāng|||||to open; measure word for flat objects|
+3|长|zhǎng|||||to grow; suffix for head|长#2
+3|着急|zháojí|||||anxious|
+3|照|zhào|||||to shine, to photograph|
+3|照顾|zhàogù|||||to take care of|
+3|照片|zhàopiàn|||||photo|
+3|照相|zhàoxiàng|||||to take a picture|
+3|直到|zhídào|||||until|
+3|只|zhǐ|||||only, merely|只#2
+3|纸|zhǐ|||||paper|
+3|只能|zhǐ néng|||||can only|
+3|只是|zhǐshì|||||only, merely; but|
+3|只要|zhǐyào|||||as long as|
+3|只有|zhǐyǒu|||||only if|
+3|中|zhōng|||||middle|
+3|中间|zhōngjiān|||||middle, between|
+3|终于|zhōngyú|наконец|我终于找到工作了。|Wǒ zhōngyú zhǎodào gōngzuò le.|Я наконец нашёл работу.|finally|
+3|种|zhǒng|||||measure word for kinds|
+3|重要|zhòngyào|||||important|
+3|周末|zhōumò|||||weekend|
+3|主要|zhǔyào|||||main|
+3|注意|zhùyì|||||to pay attention to|
+3|住院|zhùyuàn|||||to be hospitalized|
+3|字典|zìdiǎn|||||dictionary|
+3|自行车|zìxíngchē|||||bicycle|
+3|子|zi|||||noun suffix|
+3|总|zǒng|||||always, invariably; (to sum up, to assemble; total, overall)|
+3|总是|zǒngshì|||||always|
+3|嘴|zuǐ|||||mouth|
+3|最好|zuìhǎo|||||best|
+3|最后|zuìhòu|||||last, final|
+3|最近|zuìjìn|||||recently|
+3|做客|zuòkè|||||to be a guest|
+3|作业|zuòyè|||||homework|
+4|啊|ā|||||ah, oh|啊#2
+4|爱情|àiqíng|||||love|
+4|爱心|àixīn|||||compassion, caring|
+4|安检|ānjiǎn|||||security check, to conduct security check|
+4|安排|ānpái|||||to arrange|
+4|按|àn|||||to press, to push; according to|
+4|按时|ànshí|||||on time, on schedule|
+4|按照|ànzhào|||||according to, in accordance with|
+4|白酒|báijiǔ|||||liquor, spirit|
+4|办公|bàngōng|||||to handle official business, to work|
+4|办理|bànlǐ|||||to handle, to process|
+4|办事|bànshì|||||to handle matters, to take care of things|
+4|棒|bàng|||||great, excellent; (stick, club)|
+4|保护|bǎohù|||||to protect|
+4|保证|bǎozhèng|||||to guarantee, to ensure; guarantee, assurance|
+4|抱|bào|||||to hold, to embrace, to hug|
+4|报考|bàokǎo|||||to apply for an exam, to register for a test|
+4|报名|bàomíng|||||to sign up, to register|
+4|抱歉|bàoqiàn|||||sorry, apologetic|
+4|背|bēi|||||to carry on the back|
+4|背包|bēibāo|||||backpack|
+4|北部|běibù|||||northern part, north|
+4|倍|bèi|||||measure word meaning times, -fold|
+4|本科|běnkē|||||undergraduate program|
+4|本来|běnlái|||||original, former; originally, actually|
+4|笨|bèn|||||stupid, foolish|
+4|鼻子|bízi|||||nose|
+4|笔试|bǐshì|||||written test, to take a written exam|
+4|毕业|bìyè|||||to graduate|
+4|毕业生|bìyèshēng|||||graduate|
+4|便于|biànyú|||||to be convenient for, to facilitate|
+4|标准|biāozhǔn|||||standard; standard, typical|
+4|表|biǎo|||||watch, meter, table, form; (to express)|
+4|表格|biǎogé|||||form, table|
+4|表示|biǎoshì|||||to express, to indicate, to show|
+4|表现|biǎoxiàn|||||to show, to display, to perform|
+4|表扬|biǎoyáng|||||to praise, to commend|
+4|饼干|bǐnggān|||||biscuit, cracker|
+4|并|bìng|||||to combine, to merge; actually, indeed; and, also|
+4|并且|bìngqiě|и, к тому же|他聪明，并且努力。|Tā cōngming, bìngqiě nǔlì.|Он умён и к тому же старателен.|and, moreover, furthermore|
+4|播放|bōfàng|||||to broadcast, to play|
+4|博士|bóshì|||||doctor|
+4|不必|búbì|||||need not, not necessary|
+4|不便|búbiàn|||||inconvenient; to be short of money|
+4|不断|búduàn|||||continuous, unceasing; continuously, constantly|
+4|不够|búgòu|||||not enough, insufficient; not sufficiently|
+4|不过|búguò|||||but, however; (only, merely)|
+4|不论|búlùn|||||no matter, regardless|
+4|步|bù|||||step, pace|
+4|部|bù|||||department, part; measure word for books, machines, etc.|
+4|不得不|bùdébù|||||have to, cannot but|
+4|部分|bùfen|||||part, portion|
+4|不管|bùguǎn|||||no matter, regardless of|
+4|不光|bùguāng|||||not only; not only... (but also)|
+4|不仅|bùjǐn|||||not only|
+4|不满|bùmǎn|||||dissatisfied, displeased|
+4|部门|bùmén|||||department, unit|
+4|不如|bùrú|||||not as good as, inferior to|
+4|擦|cā|||||to wipe, to rub|
+4|猜|cāi|||||to guess|
+4|材料|cáiliào|||||material, data|
+4|参观|cānguān|||||to visit, to tour|
+4|参赛|cānsài|||||to enter a competition|
+4|餐厅|cāntīng|||||restaurant, dining hall|
+4|操场|cāochǎng|||||playground|
+4|厕所|cèsuǒ|||||toilet, restroom|
+4|查看|chákàn|||||to check, to view|
+4|茶叶|cháyè|||||tea leaf|
+4|查找|cházhǎo|||||to search for, to look up|
+4|差点儿|chàdiǎnr|||||poor, not good enough; almost, nearly|
+4|产生|chǎnshēng|||||to produce, to generate, to arise|
+4|厂|chǎng|||||factory, plant|
+4|场|chǎng|||||measure word for events, performances, etc.|
+4|超过|chāoguò|||||to exceed, to surpass|
+4|车速|chēsù|||||vehicle speed|
+4|车位|chēwèi|||||parking space|
+4|城|chéng|||||city, town|
+4|乘|chéng|||||to ride, to take, to multiply|
+4|成功|chénggōng|||||to succeed; successful|
+4|乘客|chéngkè|||||passenger|
+4|诚实|chéngshí|||||honest|
+4|成为|chéngwéi|||||to become|
+4|乘坐|chéngzuò|||||to ride, to take transportation|
+4|吃惊|chījīng|||||to be startled, to be shocked|
+4|迟|chí|||||late, delayed|
+4|重|chóng|||||again, once more; (to repeat)|
+4|重新|chóngxīn|||||again, anew|
+4|出差|chūchāi|||||to go on a business trip|
+4|出又|chūkǒu|||||exit; (to export)|
+4|出现|chūxiàn|||||to appear, to emerge|
+4|出行|chūxíng|||||to travel, to go out|
+4|出租|chūzū|||||to rent out|
+4|厨房|chúfáng|||||kitchen|
+4|厨师|chúshī|||||chef, cook|
+4|窗|chuāng|||||window|
+4|窗户|chuānghu|||||window|
+4|吹|chuī|||||to blow|
+4|词语|cíyǔ|||||word, phrase|
+4|此|cǐ|||||this|
+4|此次|cǐ cì|||||this time|
+4|此外|cǐwài|||||besides, in addition, moreover|
+4|从此|cóngcǐ|||||from then on, since then|
+4|从来|cónglái|||||always, at all times|
+4|从中|cóngzhōng|||||from among, from it|
+4|粗|cū|||||coarse, rough, thick|
+4|粗心|cūxīn|||||careless|
+4|村|cūn|||||village|
+4|存|cún|||||to store, to keep, to exist|
+4|错过|cuòguò|||||to miss, to let slip|
+4|错误|cuòwù|||||wrong, mistaken; mistake, error|
+4|答应|dāying|||||to agree, to promise, to reply|
+4|答|dá|||||to answer, to reply|
+4|答案|dá’àn|||||answer, solution|
+4|达到|dádào|||||to reach, to achieve|
+4|打招呼|dǎ zhāohu|||||to greet, to say hello|
+4|打败|dǎbài|||||to defeat, to beat|
+4|打工|dǎgōng|||||to work a temporary job|
+4|打扰|dǎrǎo|||||to disturb, to bother|
+4|打印|dǎyìn|||||to print|
+4|打印机|dǎyìnjī|||||printer|
+4|打折|dǎzhé|||||to give a discount|
+4|打针|dǎzhēn|||||to get an injection, to receive a shot|
+4|大巴|dàbā|||||large bus, coach|
+4|大大|dàdà|||||greatly, significantly|
+4|大夫|dàifu|||||doctor (medical)|
+4|大量|dàliàng|||||large quantity, a large amount|
+4|大赛|dàsài|||||major competition, grand contest|
+4|大厅|dàtīng|||||hall, lobby|
+4|大约|dàyuē|||||approximately, about|
+4|大自然|dàzìrán|||||nature, the natural world|
+4|待|dāi|||||to stay|
+4|戴|dài|||||to wear, to put on|
+4|袋子|dàizi|||||bag, sack|
+4|单位|dānwèi|||||unit, department|
+4|当|dāng|||||to serve as, to be; at the time of|
+4|当时|dāngshí|||||at that time, then|
+4|刀|dāo|||||knife|
+4|导游|dǎoyóu|||||tour guide; to guide|
+4|倒|dào|||||to fall, to collapse; (however, but)|
+4|道|dào|||||path, way, method; measure word for long objects|
+4|到底|dàodǐ|||||finally, after all, to the end|
+4|到来|dàolái|||||to arrive|
+4|道路|dàolù|||||road, path|
+4|道歉|dàoqiàn|||||to apologize|
+4|得意|déyì|||||proud, complacent|
+4|登机|dēngjī|||||to board a plane|
+4|等|děng|||||and so on, etc.; (class, grade; measure word)|等#2
+4|等到|děngdào|||||until, by the time|
+4|低|dī|||||low; to lower|
+4|低价|dījià|||||low price|
+4|低温|dīwēn|||||low temperature|
+4|低于|dīyú|||||to be lower than|
+4|底|dǐ|||||bottom, base|
+4|底下|dǐxia|||||below, underneath|
+4|地球|dìqiú|||||earth|
+4|地址|dìzhǐ|||||address|
+4|点名|diǎnmíng|||||to call the roll, to mention by name|
+4|点头|diǎntóu|||||to nod|
+4|电动车|diàndòngchē|||||electric vehicle, e-bike|
+4|电视剧|diànshìjù|||||TV drama|
+4|掉|diào|||||to fall, to drop|
+4|调查|diàochá|||||to investigate|
+4|订|dìng|||||to order, to book|
+4|定|dìng|||||to fix, to set, to determine|
+4|东部|dōngbù|||||eastern part|
+4|动车|dòngchē|||||high-speed train|
+4|动作|dòngzuò|||||movement, action|
+4|读者|dúzhě|||||reader|
+4|堵车|dǔchē|||||traffic jam|
+4|度假|dùjià|||||to go on vacation|
+4|肚子|dùzi|||||belly, stomach|
+4|短信|duǎnxìn|||||text message|
+4|队|duì|||||team, squad; (measure word for teams)|
+4|对方|duìfāng|||||the other party, counterpart|
+4|对面|duìmiàn|||||opposite side|
+4|对于|duìyú|||||regarding, concerning|
+4|队员|duìyuán|||||team member|
+4|队长|duìzhǎng|||||team leader|
+4|顿|dùn|||||measure word for meals, scolding; (to pause)|
+4|多么|duōme|||||how, so, what|
+4|多数|duōshù|||||majority|
+4|多样|duōyàng|||||diverse, varied|
+4|而|ér|||||but, and, yet|
+4|儿童|értóng|||||child|
+4|发出|fāchū|||||to send out, to issue|
+4|发送|fāsòng|||||to send|
+4|法|fǎ|||||law|
+4|法律|fǎlǜ|||||law|
+4|翻译|fānyì|||||to translate; translation|
+4|烦|fán|||||annoyed, vexed; to bother|
+4|烦恼|fánnǎo|||||worried, distressed|
+4|反对|fǎnduì|||||to oppose, to be against|
+4|方面|fāngmiàn|||||aspect, side|
+4|方式|fāngshì|||||way, method|
+4|房东|fángdōng|||||landlord|
+4|房租|fángzū|||||rent|
+4|放弃|fàngqì|||||to give up|
+4|放松|fàngsōng|||||to relax|
+4|费|fèi|||||fee, expense; to spend|
+4|费用|fèiyong|||||cost, expense|
+4|分数|fēnshù|||||score, grade, fraction|
+4|分为|fēnwéi|||||to be divided into|
+4|份|fèn|||||measure word for copies, shares|
+4|丰富|fēngfù|||||rich, abundant|
+4|风景|fēngjǐng|||||scenery, landscape|
+4|否则|fǒuzé|||||otherwise, if not|
+4|幅|fú|||||measure word for paintings, photos, etc.|
+4|符合|fúhé|||||to conform to, to match|
+4|付|fù|||||to pay|
+4|父母|fùmǔ|||||parents|
+4|父女|fùnǚ|||||father and daughter|
+4|父亲|fùqīn|||||father|
+4|复印|fùyìn|||||to photocopy, to duplicate|
+4|复杂|fùzá|||||complicated, complex|
+4|负责|fùzé|||||to be responsible; responsible|
+4|负责人|fùzérén|||||person in charge|
+4|父子|fùzǐ|||||father and son|
+4|改|gǎi|||||to change, to alter|
+4|改变|gǎibiàn|||||to change|
+4|干|gān|||||dry; (dried food)|干#2
+4|干杯|gānbēi|||||to toast, cheers|
+4|赶|gǎn|||||to hurry, to catch up|
+4|敢|gǎn|||||to dare|
+4|感|gǎn|||||sense, feeling, as suffix|
+4|感动|gǎndòng|||||moved, touched; to move, to touch|
+4|赶紧|gǎnjǐn|||||quickly, promptly|
+4|感觉|gǎnjué|||||feeling, sense; to feel|
+4|赶快|gǎnkuài|||||quickly, at once|
+4|感情|gǎnqíng|||||emotion, feeling|
+4|感人|gǎnrén|||||touching, moving|
+4|赶上|gǎnshàng|||||to catch up, to keep up with|
+4|感受|gǎnshòu|||||feeling, experience; to feel|
+4|感谢|gǎnxiè|||||to thank|
+4|干活儿|gànhuór|||||to work|
+4|钢琴|gāngqín|||||piano|
+4|高价|gāojià|||||high price|
+4|高考|gāokǎo|||||Gaokao, college entrance examination|
+4|高速|gāosù|||||high speed|
+4|高温|gāowēn|||||high temperature|
+4|高于|gāoyú|||||higher than, above|
+4|胳膊|gēbo|||||arm|
+4|歌声|gēshēng|||||sound of singing, song|
+4|歌手|gēshǒu|||||singer|
+4|各|gè|||||each, every; respectively|
+4|各地|gèdì|||||various places|
+4|各个|gègè|||||each, every; one by one|
+4|各位|gèwèi|||||everyone, all (respectful)|
+4|各种|gèzhǒng|||||various kinds, all kinds|
+4|更加|gèngjiā|||||more, even more|
+4|工厂|gōngchǎng|||||factory|
+4|功夫|gōngfu|||||kung fu, skill, effort|
+4|公共|gōnggòng|||||public, common|
+4|功课|gōngkè|||||schoolwork, homework|
+4|公里|gōnglǐ|||||kilometer|
+4|公路|gōnglù|||||highway, road|
+4|工人|gōngrén|||||worker|
+4|工资|gōngzī|||||wage, salary|
+4|共|gòng|||||together, in total|
+4|共同|gòngtóng|||||common, joint|
+4|够|gòu|||||enough; sufficiently|
+4|购买|gòumǎi|||||to purchase|
+4|购物|gòuwù|||||to shop|
+4|估计|gūjì|||||to estimate, to guess|
+4|姑娘|gūniang|||||girl|
+4|鼓励|gǔlì|||||to encourage|
+4|顾客|gùkè|||||customer|
+4|故意|gùyì|||||deliberately, on purpose|
+4|挂|guà|||||to hang, to suspend|
+4|关键|guānjiàn|||||crux; key, crucial|
+4|观看|guānkàn|||||to watch, to view|
+4|观众|guānzhòng|||||audience|
+4|管|guǎn|||||control, manage, care about, bother with; (pipe, tube); (measure word for tubular objects)|
+4|管理|guǎnlǐ|||||manage|
+4|光|guāng|||||light, rayl smooth, shiny, used up; bare, expose; only, merely, solely|
+4|广播|guǎngbō|||||broadcast, air; radio broadcast, boradcasting|
+4|广告|guǎnggào|||||advertisement|
+4|逛|guàng|||||stroll, roam, browse, shop around|
+4|规定|guīdìng|||||stipulate, prescribe, set rules; regulation, rule, stipulation|
+4|国籍|guójí|||||nationality|
+4|国际|guójì|||||international; world|
+4|果汁|guǒzhī|||||fruit juice|
+4|过程|guòchéng|||||process|
+4|海洋|hǎiyáng|||||ocean, sea|
+4|害羞|hàixiū|||||shy, bshful|
+4|寒假|hánjià|||||the winter vacation|
+4|寒冷|hánlěng|||||cold, frigid, chilly|
+4|喊|hǎn|||||shout|
+4|汗|hàn|||||sweat|
+4|航班|hángbān|||||flight|
+4|好处|hǎochù|||||benefit|
+4|好好|hǎohǎo|||||good, nice, proper; well, thoroughly, serious, all out|
+4|好笑|hǎoxiào|||||funny, ridiculous|
+4|合格|hégé|||||qualified|
+4|盒子|hézi|||||box|
+4|红包|hóngbāo|||||red envelope, red packet|
+4|厚|hòu|||||thick|
+4|后悔|hòuhuǐ|||||regret|
+4|忽然|hūrán|||||suddenly|
+4|互联网|hùliánwǎng|||||Internet|
+4|护士|hùshi|||||nurse|
+4|互相|hùxiāng|||||each other|
+4|话剧|huàjù|||||drama|
+4|怀疑|huáiyí|||||doubt|
+4|坏处|huàichù|||||disadvantage, harm|
+4|环保|huánbǎo|||||environmental protection; environmentally friendly, green|
+4|换乘|huànchéng|||||transfer, change|
+4|回复|huífù|||||reply|
+4|回信|huíxìn|||||reply to a letter, write backl; reply letter, response|
+4|回忆|huíyì|||||memory|
+4|会员|huìyuán|||||membership|
+4|活|huó|||||live; alive, living, flexible; work, job, livelihood|
+4|活动|huódòng|||||move, exercise, beactive; activity, event, exercise|
+4|活泼|huópō|||||lively|
+4|火|huǒ|||||fire; urgent, popular, hot|
+4|货|huò|||||goods, commodity, money|
+4|获得|huòdé|||||get|
+4|获奖|huòjiǎng|||||win a prize, receive an award|
+4|获取|huòqǔ|||||gain, obtain|
+4|基本|jīběn|||||basic, fundamental, essential; basically, essentially, on the whole|
+4|基本上|jīběnshàng|||||basically|
+4|基础|jīchǔ|||||Basics|
+4|激动|jīdòng|||||excited, agitated, emotionally moved; to excite, to agitate, to move (emotionally)|
+4|积极|jījí|||||positive|
+4|积累|jīlěi|накапливать|每天积累几个新词。|Měitiān jīlěi jǐ ge xīn cí.|Каждый день накапливай несколько новых слов.|to accumulate, to build up, to amass|
+4|及时|jíshí|||||timely, prompt, in time; without delay, promptly, in a timely manner|
+4|即使|jíshǐ|||||even if|
+4|既|jì|||||already, since; both ... and ..., as well as (used in the pattern 既...又/ 也...)|
+4|寄|jì|||||send|
+4|计划|jìhuà|||||plan, project, program, scheme; to plan, to map out, to intend|
+4|既然|jìrán|||||since|
+4|技术|jìshù|||||technology|
+4|继续|jìxù|||||continue|
+4|记者|jìzhě|||||reporter|
+4|加班|jiābān|||||work overtime|
+4|家具|jiājù|||||furniture|
+4|加快|jiākuài|||||speed up, accelerate|
+4|加强|jiāqiáng|||||strengthen, reinforce|
+4|加入|jiārù|||||add, mix, join, become a member|
+4|加上|jiāshàng|||||plus, add, with the addition of|
+4|家庭|jiātíng|||||family|
+4|家乡|jiāxiāng|||||hometown|
+4|加油|jiāyóu|||||oil, refuel, make an all-out effort|
+4|加油站|jiāyóuzhàn|||||gas station|
+4|家长|jiāzhǎng|||||parent, the head of the family|
+4|假|jiǎ|||||false, fake|
+4|价格|jiàgé|||||price|
+4|价钱|jiàqián|||||price|
+4|假日|jiàrì|||||holiday, day off, vacation|
+4|减|jiǎn|||||to reduce, to decrease, to subtract, to lessen|
+4|减轻|jiǎnqīng|||||to lighten, to ease, to alleviate, to reduce (burden, weight, pressure)|
+4|减少|jiǎnshǎo|||||to reduce, to decrease, to cut down, to diminish|
+4|健身|jiànshēn|||||to exercise, to work out, to keep fit, to engage in fitness activities|
+4|健身房|jiànshēnfáng|||||gym|
+4|建议|jiànyì|||||to suggest, to propose, to recommend; suggestion, proposal, recommendation|
+4|江|jiāng|||||river|
+4|将|jiāng|||||with, by (used to introduce the object of a verb, similar to 把); will, shall, be about to|
+4|将来|jiānglái|||||future|
+4|将要|jiāngyào|||||will, be going to, be about to|
+4|奖|jiǎng|||||prize, award, reward; to award, to reward, to praise|
+4|奖金|jiǎngjīn|||||bonus, prize money, cash award|
+4|奖学金|jiǎngxuéjīn|||||scholarship, fellowship|
+4|降|jiàng|||||to fall, to drop, to descend, to lower|
+4|降低|jiàngdī|||||to reduce, to lower, to bring down|
+4|降价|jiàngjià|||||to cut the price, to reduce prices|
+4|降落|jiàngluò|||||to descend, to land, to touch down|
+4|降温|jiàngwēn|||||to cool down, to lower the temperature|
+4|交|jiāo|||||to hand in, to submit; to meet, to cross; to make friends with; friend, acquaintance, relationship|
+4|骄傲|jiāo’ào|||||proud, arrogant, conceited; pride, arrogance|
+4|交警|jiāojǐng|||||traffic police|
+4|交流|jiāoliú|||||communicate|
+4|郊区|jiāoqū|||||suburb|
+4|交通|jiāotōng|||||traffic|
+4|教练|jiàoliàn|||||coach|
+4|教师|jiàoshī|||||teacher|
+4|教授|jiàoshòu|||||professor|
+4|教学|jiàoxué|||||teach|
+4|教育|jiàoyù|||||education; to educate|
+4|叫作|jiàozuò|||||be called, be known as|
+4|街道|jiēdào|||||street|
+4|接受|jiēshòu|||||accept|
+4|接着|jiēzhe|||||to continue, to follow, to catch; then, next, subsequently|
+4|结果|jiéguǒ|||||result, outcome, consequence; as a result, consequently, in the end|
+4|节假日|jiéjiàrì|||||festivals and holidays, holiday season|
+4|节约|jiéyuē|||||to save, to economize, to conserve|
+4|结账|jiézhàng|||||to pay the bill, to settle an account, to check out|
+4|解释|jiěshì|||||to explain, to interpret, to account for|
+4|今后|jīnhòu|||||from now on, in the future, henceforth|
+4|仅|jǐn|||||only, merely, solely|
+4|尽管|jǐnguǎn|||||feel free to, not hesitate to (often in the pattern 尽管 + verb); although, even though, despite|
+4|仅仅|jǐnjǐn|||||only, merely, barely, simply|
+4|紧张|jǐnzhāng|||||nervous, tense, strained, in short supply|
+4|进入|jìnrù|||||to enter, to access, to be admitted to|
+4|进行|jìnxíng|||||to carry out, to conduct, to proceed with, to undertake|
+4|禁止|jìnzhǐ|||||to prohibit, to forbid, to ban|
+4|精彩|jīngcǎi|||||brilliant, splendid, wonderful, exciting|
+4|经济|jīngjì|||||economy, economics; economical, affordable|
+4|京剧|jīngjù|||||Beijing opera|
+4|经历|jīnglì|||||to experience, to go through; experience, past, history|
+4|经验|jīngyàn|опыт|他有丰富的经验。|Tā yǒu fēngfù de jīngyàn.|У него богатый опыт.|experience|
+4|警察|jǐngchá|||||police|
+4|景点|jǐngdiǎn|||||scenic spot, tourist attraction, point of interest|
+4|景区|jǐngqū|||||scenic area, tourist attraction zone|
+4|景色|jǐngsè|||||scenery|
+4|竟然|jìngrán|||||unexpectedly|
+4|竞争|jìngzhēng|||||compete|
+4|镜子|jìngzi|||||mirror|
+4|究竟|jiūjìng|||||actually, exactly, after all (used for emphasis in questions); the outcome, the details of a situation|
+4|就是|jiùshì|||||precisely, exactly (used for emphasis); only, merely, simply; even if, even (as in 就是...也...)|
+4|举|jǔ|||||to raise, to lift; to hold (an event); to give (an example); to recommend|
+4|举办|jǔbàn|||||to hold, to host, to organize (an event, activity)|
+4|举例|jǔlì|||||to give an example, to illustrate with an example|
+4|举行|jǔxíng|||||to hold, to convene, to conduct (a ceremony, meeting, event)|
+4|聚|jù|||||to gather, to assemble, to get together|
+4|聚餐|jùcān|||||to have a dinner together, to dine together|
+4|聚会|jùhuì|||||to get together, to meet, to gather; party, gathering, meeting|
+4|拒绝|jùjué|||||to refuse, to reject, to decline|
+4|距离|jùlí|||||to be away from, to be at a distance from; distance, gap|
+4|剧院|jùyuàn|||||theater, opera house, playhouse|
+4|开玩笑|kāi wánxiào|||||make fun of|
+4|看法|kànfǎ|||||view|
+4|烤|kǎo|||||to bake, to roast, to grill, to toast|
+4|考虑|kǎolǜ|||||to consider, to think over, to contemplate|
+4|考生|kǎoshēng|||||examinee|
+4|棵|kē|||||measure word for trees, plants, and other similar objects|
+4|科技|kējì|||||science and technology|
+4|科学|kēxué|||||science; scientific|
+4|咳|ké|||||to cough|
+4|咳嗽|késou|||||to cough|
+4|可惜|kěxī|||||regrettable, unfortunate, a pity|
+4|克|kè|||||gram|
+4|课程|kèchéng|||||curriculum|
+4|客气|kèqi|||||polite, courteous; to be polite, to say polite remarks|
+4|课堂|kètáng|||||classroom|
+4|客厅|kètīng|||||living room, parlor|
+4|肯定|kěndìng|||||to be certain, to be sure, to affirm; positive, affirmative, definite; surely, certainly, definitely|
+4|空|kōng|||||empty, vacant, hollow; (in vain, for nothing)|
+4|空气|kōngqì|||||atmosphere, air|
+4|恐怕|kǒngpà|||||to fear, to be afraid; I'm afraid, perhaps, maybe|
+4|空|kòng|||||to leave empty, to make time, to free up; empty, free, unoccupied; free time, empty space|空#2
+4|又语|kǒuyǔ|||||spoken language|
+4|苦|kǔ|||||bitter|
+4|快餐|kuàicān|||||fast food|
+4|快递|kuàidì|||||express delivery|
+4|快速|kuàisù|||||fast, high-speed|
+4|困|kùn|||||sleepy, tired; (to trap, to confine)|
+4|困难|kùnnan|||||difficult, hard; difficulty, trouble|
+4|拉|lā|||||to pull, to drag, to draw|
+4|垃圾|lājī|||||garbage, trash, rubbish|
+4|辣|là|||||hot, spicy|
+4|来不及|láibují|||||there's not enough time, it's too late|
+4|来得及|láidejí|||||there's still time, can make it in time|
+4|懒|lǎn|||||lazy, idle|
+4|浪费|làngfèi|||||to waste, to squander|
+4|浪漫|làngmàn|||||romantic|
+4|老虎|lǎohǔ|||||tiger|
+4|老家|lǎojiā|||||hometown, home state|
+4|老年|lǎonián|||||elderly|
+4|老是|lǎoshì|||||always, constantly|
+4|冷静|lěngjìng|||||calm, cool-headed|
+4|理发|lǐfà|||||to have a haircut, to cut hair|
+4|理解|lǐjiě|||||to understand, to comprehend|
+4|礼貌|lǐmào|||||courtesy, politeness; polite|
+4|理想|lǐxiǎng|||||ideal, dream; ideal|
+4|厉害|lìhai|||||severe, fierce, impressive, excellent|
+4|力气|lìqi|||||strength, physical power|
+4|例如|lìrú|||||for example, such as|
+4|例子|lìzi|||||example, instance|
+4|俩|liǎ|||||two, both|
+4|连|lián|||||used to introduce the object of a verb, linking; (even, including); (to connect, to link)|
+4|联系|liánxì|||||to contact, to connect|
+4|凉|liáng|||||cool, cold|
+4|量|liáng|||||to measure, to weigh|
+4|两|liǎng|||||measure word for vehicles, animals, etc.|两#2
+4|亮|liàng|||||bright, light; to shine, to show|
+4|列|liè|||||to arrange in a row, to list; measure word for rows or lines|
+4|零下|líng xià|||||below zero|
+4|零花钱|línghuāqián|||||pocket money, spending money|
+4|零钱|língqián|||||change, small denominations of money|
+4|零食|língshí|||||snacks, between-meal nibbles|
+4|另|lìng|||||other, another; (separately, otherwise)|
+4|另外|lìngwài|||||other, else; in addition, moreover; besides, furthermore|
+4|留|liú|||||to stay, to remain, to keep|
+4|流|liú|||||to flow, to circulate|
+4|流利|liúlì|||||fluent, smooth|
+4|留下|liúxia|||||to leave behind, to remain|
+4|流行|liúxíng|||||to be popular, to be in fashion, to spread|
+4|路过|lùguò|||||to pass by, to go by|
+4|旅馆|lǚguǎn|||||hotel, inn|
+4|旅客|lǚkè|||||traveler, passenger|
+4|旅行|lǚxíng|||||to travel|
+4|律师|lǜshī|||||lawyer, attorney|
+4|乱|luàn|||||messy, disorderly; arbitrarily, recklessly|
+4|落|luò|||||to fall, to drop, to land|
+4|麻烦|máfan|||||troublesome, annoying; to trouble, to bother; trouble, inconvenience|
+4|馒头|mántou|||||steamed bun, mantou|
+4|满|mǎn|||||full, filled; to fill|
+4|毛巾|máojīn|||||towel|
+4|毛衣|máoyī|||||sweater, woolen garment|
+4|帽子|màozi|||||hat, cap|
+4|美|měi|||||beautiful, pretty|
+4|美好|měihǎo|||||beautiful, splendid|
+4|美景|měijǐng|||||beautiful scenery|
+4|美丽|měilì|||||beautiful, lovely|
+4|美食|měishí|||||delicious food, cuisine|
+4|梦|mèng|||||dream; to dream|
+4|梦想|mèngxiǎng|||||to dream; dream|
+4|密码|mìmǎ|||||password, PIN code|
+4|免费|miǎnfèi|||||free of charge, to be free|
+4|面对|miànduì|||||to face, to confront|
+4|面试|miànshì|||||interview, audition; to interview|
+4|秒|miǎo|||||second, unit of time|
+4|民族|mínzú|||||ethnic group, nationality|
+4|末|mò|||||end, last|
+4|母女|mǔnǚ|||||mother and daughter|
+4|母亲|mǔqīn|||||mother|
+4|母子|mǔzǐ|||||mother and son|
+4|目标|mùbiāo|||||goal, target, objective|
+4|目的|mùdì|||||purpose, aim, goal|
+4|目的地|mùdìdì|||||destination|
+4|目前|mùqián|||||currently, at present|
+4|耐心|nàixīn|||||patient; patience|
+4|南部|nánbù|||||southern part, south|
+4|难道|nándào|||||could it be that...?|
+4|男士|nánshì|||||man, gentleman|
+4|难受|nánshòu|||||uncomfortable, painful, hard to bear|
+4|难忘|nánwàng|||||unforgettable, to be hard to forget|
+4|男性|nánxìng|||||male, masculine|
+4|内|nèi|||||inside, within|
+4|内容|nèiróng|||||content, substance|
+4|内心|nèixīn|||||heart, inner self|
+4|能否|néng fǒu|||||whether or not, can or cannot|
+4|能够|nénggòu|||||can, be able to, be capable of|
+4|能力|nénglì|||||ability, capability, capacity|
+4|嗯|ǹg|||||uh-huh, hmm|
+4|年底|niándǐ|||||end of the year|
+4|年龄|niánlíng|||||age|
+4|农村|nóngcūn|||||rural area, countryside|
+4|弄|nòng|||||to do, to handle, to mess with|
+4|女性|nǚxìng|||||female, feminine|
+4|暖和|nuǎnhuo|||||warm; to warm up|
+4|偶尔|ǒu’ěr|||||occasionally, sometimes; occasional|
+4|拍|pāi|||||to pat, to clap, to take (a photo); beat, rhythm|
+4|排|pái|||||to line up, to arrange; row, line; measure word for rows|
+4|牌|pái|||||card, brand, plaque, sign|
+4|排队|páiduì|||||to line up, to queue up|
+4|排球|páiqiú|||||volleyball|
+4|牌子|páizi|||||brand, sign, label|
+4|判断|pànduàn|||||to judge, to determine|
+4|陪|péi|||||to accompany, to keep someone company|
+4|批评|pīpíng|||||to criticize|
+4|皮肤|pífū|||||skin|
+4|脾气|píqi|||||temperament, disposition, temper|
+4|皮鞋|píxié|||||leather shoes|
+4|篇|piān|||||measure word for essays, articles, papers; piece, sheet|
+4|片|piàn|||||piece, slice, area; measure word for flat objects|
+4|乒乓球|pīngpāngqiú|||||table tennis, ping-pong|
+4|平常|píngcháng|||||ordinary, usual; usually, ordinarily|
+4|破|pò|||||broken, damaged; to break, to ruin|
+4|葡萄|pútao|||||grape|
+4|葡萄酒|pútaojiǔ|||||wine, grape wine|
+4|普遍|pǔbiàn|||||widespread, universal, common|
+4|普通|pǔtōng|||||ordinary, common|
+4|普通话|pǔtōnghuà|||||Mandarin Chinese, standard Chinese|
+4|期|qī|||||period, phase; measure word for issues, semesters, etc.|
+4|期末|qīmò|||||end of term, end of semester|
+4|期中|qīzhōng|||||midterm, middle of the term|
+4|其次|qícì|||||next, secondly, then|
+4|其中|qízhōng|||||among them, inside|
+4|起到|qǐdào|||||to play the role of, to function as, to act as|
+4|气|qì|||||air, gas, breath; to anger, to make angry|
+4|气候|qìhòu|||||climate|
+4|汽水|qìshuǐ|||||soda, soft drink|
+4|气温|qìwēn|||||air temperature|
+4|千克|qiānkè|||||kilogram|
+4|千万|qiānwàn|||||ten million, by all means, absolutely|
+4|签证|qiānzhèng|||||visa; to issue a visa|
+4|前方|qiánfāng|||||ahead, front|
+4|前后|qiánhòu|||||front and back, around, about|
+4|强|qiáng|||||strong, powerful|
+4|敲|qiāo|||||to knock, to tap, to strike|
+4|桥|qiáo|||||bridge|
+4|巧|qiǎo|||||skillful, clever, opportune|
+4|巧克力|qiǎokèlì|||||chocolate|
+4|亲戚|qīnqi|||||relative, relative family member|
+4|琴|qín|||||musical instrument, piano, etc.|
+4|轻|qīng|||||light, not heavy, gentle, easy|
+4|青年|qīngnián|||||youth, young people|
+4|轻松|qīngsōng|||||relaxed, light, easy|
+4|情况|qíngkuàng|||||situation, circumstance|
+4|庆祝|qìngzhù|||||to celebrate|
+4|球队|qiúduì|||||sports team, ball team|
+4|球迷|qiúmí|||||fan, sports enthusiast|
+4|区|qū|||||district, area, region|
+4|区别|qūbié|||||difference; to distinguish, to differ|
+4|取|qǔ|||||to take, to get, to obtain|
+4|取得|qǔdé|||||to obtain, to gain|
+4|取消|qǔxiāo|||||to cancel, to call off|
+4|全|quán|||||whole, entire; completely, entirely|
+4|全部|quánbù|||||all, the whole thing|
+4|全都|quándōu|||||all, entirely|
+4|全球|quánqiú|||||the whole world, global|
+4|全身|quánshēn|||||whole body|
+4|缺|quē|||||to lack, to be short of|
+4|缺点|quēdiǎn|||||shortcoming, defect|
+4|缺少|quēshǎo|||||to lack, to be short of|
+4|却|què|||||but, yet, however|
+4|确实|quèshí|||||indeed, really|
+4|然而|rán’ér|||||however, but|
+4|热闹|rènao|||||lively, bustling; to liven up; lively atmosphere|
+4|人生|rénshēng|||||life|
+4|人数|rénshù|||||number of people|
+4|人员|rényuán|||||personnel, staff|
+4|任何|rènhé|||||any, whatever|
+4|任务|rènwu|||||task, assignment, mission|
+4|扔|rēng|||||to throw, to toss|
+4|仍|réng|||||still, yet|
+4|仍然|réngrán|||||still, yet|
+4|日常|rìcháng|||||daily, everyday|
+4|日记|rìjì|||||diary|
+4|日期|rìqī|||||date|
+4|日子|rìzi|||||day, life, time|
+4|入|rù|||||to enter, to go in|
+4|入又|rùkǒu|||||entrance|
+4|入学|rùxué|||||to enter school, to enroll|
+4|入住|rùzhù|||||to check in, to move in|
+4|散步|sànbù|||||to take a walk, to stroll|
+4|扫码|sǎomǎ|||||to scan a code|
+4|森林|sēnlín|||||forest|
+4|商量|shāngliang|||||to discuss, to consult|
+4|商品|shāngpǐn|||||product, commodity|
+4|伤心|shāngxīn|||||sad, heartbroken|
+4|上门|shàngmén|||||to visit, to go to someone's house|
+4|稍|shāo|||||a little, slightly|
+4|稍微|shāowēi|||||a little, slightly|
+4|少见|shǎojiàn|||||rare, seldom seen|
+4|少量|shǎoliàng|||||small amount, a little|
+4|少数|shǎoshù|||||minority, small number|
+4|少年|shàonián|||||juvenile, teenager, youth|
+4|社会|shèhuì|||||society, community|
+4|摄氏度|shèshìdù|||||degrees Celsius|
+4|身|shēn|||||body, oneself; measure word for clothes|
+4|深|shēn|||||deep, profound; (deeply, late)|
+4|身份证|shēnfènzhèng|||||ID card, identification card|
+4|申请|shēnqǐng|подавать заявку|我想申请这所大学。|Wǒ xiǎng shēnqǐng zhè suǒ dàxué.|Я хочу подать документы в этот университет.|to apply, to file an application|
+4|甚至|shènzhì|||||even, so much as that|
+4|生|shēng|||||to give birth, to produce, to grow|
+4|生|shēng|||||raw, uncooked, unripe; (very, extremely, terribly)|生#2
+4|生命|shēngmìng|||||life|
+4|生意|shēngyi|||||business, trade|
+4|省|shěng|||||province|
+4|剩|shèng|||||to be left over, to remain|
+4|失败|shībài|||||to fail; failed, unsuccessful|
+4|师傅|shīfu|||||master, skilled worker, respectful address for a tradesperson|
+4|失去|shīqù|||||to lose, to be lost|
+4|师生|shīshēng|||||teacher and student, teachers and students|
+4|失望|shīwàng|||||to be disappointed, to lose hope; disappointed|
+4|十分|shífēn|||||very, extremely, fully|
+4|实际|shíjì|||||reality, actuality; actual, practical|
+4|时间表|shíjiānbiǎo|||||schedule, timetable|
+4|实际上|shíjìshàng|||||actually, in fact|
+4|食品|shípǐn|||||food, provisions|
+4|食堂|shítáng|||||cafeteria, dining hall|
+4|食物|shíwù|||||food|
+4|实在|shízài|||||honest, reliable; really, indeed|
+4|十字路又|shízì lùkǒu|||||intersection, crossroads|
+4|使|shǐ|||||to make, to cause, to use|
+4|使馆|shǐguǎn|||||embassy|
+4|使用|shǐyòng|||||to use, to employ|
+4|市场|shìchǎng|||||market, marketplace|
+4|是否|shìfǒu|||||whether or not, if|
+4|适合|shìhé|||||to suit, to fit, to be suitable|
+4|世纪|shìjì|||||century|
+4|视频|shìpín|||||video, video clip|
+4|市区|shìqū|||||urban area, city center|
+4|试题|shìtí|||||test questions, exam paper|
+4|适应|shìyìng|||||to adapt, to fit, to suit|
+4|收费|shōufèi|||||to charge a fee, to collect payment|
+4|收入|shōurù|||||to receive, to take in; income, revenue|
+4|收拾|shōushi|||||to put in order, to tidy up, to pack|
+4|收听|shōutīng|||||to listen in, to tune in|
+4|首|shǒu|||||measure word for songs, poems, etc.|
+4|首都|shǒudū|||||capital|
+4|首先|shǒuxiān|||||first, firstly; first of all|
+4|受不了|shòubuliǎo|||||to be unable to bear, to be unable to stand|
+4|售票员|shòupiàoyuán|||||ticket seller, conductor|
+4|受伤|shòushāng|||||to be injured, to get hurt|
+4|输|shū|||||to lose, to be defeated; to transport|
+4|熟|shú/shóu|||||ripe, cooked, mature|
+4|熟悉|shúxi|||||to be familiar with, to know well|
+4|暑假|shǔjià|||||summer vacation|
+4|数|shù|||||number, figure; several, a few|
+4|数量|shùliàng|||||quantity, amount|
+4|树林|shùlín|||||woods, forest|
+4|数字|shùzì|||||digit, figure, number|
+4|帅|shuài|||||handsome, good-looking|
+4|顺便|shùnbiàn|||||conveniently, in passing|
+4|顺利|shùnlì|||||smooth, successful, going well|
+4|顺序|shùnxù|||||order, sequence|
+4|说法|shuōfǎ|||||way of saying something, version, statement|
+4|说明|shuōmíng|||||to explain, to clarify; explanation, instructions|
+4|说明书|shuōmíngshū|||||instruction manual, user guide, explanatory booklet|
+4|硕士|shuòshì|||||master|
+4|死|sǐ|||||to die, to be dead; dead, extreme; extremely, to death|
+4|速度|sùdù|||||speed|
+4|塑料|sùliào|||||plastic|
+4|酸|suān|||||sour, tart|
+4|酸奶|suānnǎi|||||yogurt|
+4|算|suàn|||||to calculate, to count; considered, at last|
+4|随便|suíbiàn|||||to do as one pleases, casual; casual, informal; anyway, whatever|
+4|随着|suízhe|||||along with, following|
+4|孙女|sūnnǚ|||||granddaughter|
+4|孙子|sūnzi|||||grandson|
+4|所有|suǒyǒu|||||all, every; (to possess, to own; possessions, belongings)|
+4|台|tái|||||measure word for machines, vehicles, etc.; (platform, stage)|
+4|抬|tái|||||to lift, to raise|
+4|抬头|táitóu|||||to raise one's head, to look up|
+4|态度|tàidù|||||attitude, manner|
+4|弹|tán|||||to play , to spring|
+4|谈|tán|||||to talk, to discuss|
+4|汤|tāng|||||soup|
+4|躺|tǎng|||||to lie down|
+4|趟|tàng|||||measure word for trips, journeys|
+4|讨论|tǎolùn|||||to discuss, to talk over|
+4|讨厌|tǎoyàn|||||disgusting, annoying; to dislike, to loathe|
+4|特点|tèdiǎn|||||characteristic, feature|
+4|提|tí|||||to carry, to lift, to mention, to bring up|
+4|提出|tíchū|||||to put forward, to propose, to raise|
+4|提到|tídào|||||to mention, to refer to|
+4|提供|tígōng|||||to provide, to supply, to offer|
+4|提前|tíqián|||||to advance, to move up, to do something ahead of time|
+4|提醒|tíxǐng|||||to remind, to alert|
+4|体检|tǐjiǎn|||||to undergo a physical examination, to have a medical checkup|
+4|体温|tǐwēn|||||body temperature|
+4|体重|tǐzhòng|||||body weight|
+4|填写|tiánxiě|||||to fill in, to complete (a form)|
+4|条件|tiáojiàn|||||condition, requirement, terms|
+4|听力|tīnglì|||||listening ability, hearing|
+4|听众|tīngzhòng|||||audience, listeners|
+4|停|tíng|||||to stop, to halt|
+4|停车|tíngchē|||||to park, to stop a vehicle|
+4|停车场|tíngchēchǎng|||||parking lot|
+4|停止|tíngzhǐ|||||to stop, to cease|
+4|通|tōng|||||to go through, to be open; to lead to, to connect; (measure word for whole sets)|
+4|通过|tōngguò|||||to pass through, to go through; by means of|
+4|通知|tōngzhī|||||to notify, to inform; notice, notification|
+4|童年|tóngnián|||||childhood|
+4|同时|tóngshí|||||at the same time; meanwhile, moreover|
+4|同样|tóngyàng|||||same, similar|
+4|桶|tǒng|||||bucket, barrel|
+4|痛|tòng|||||painful, sore; (extremely, bitterly)|
+4|头痛|tóutòng|||||headache|
+4|图|tú|||||picture, drawing, diagram; (to plan, to scheme)|
+4|图片|túpiàn|||||picture, image, photograph|
+4|土|tǔ|||||earth, soil, land; (rustic, unrefined)|
+4|推|tuī|||||to push, to shove|
+4|推迟|tuīchí|||||to postpone, to delay|
+4|推出|tuīchū|||||to launch, to push out, to introduce|
+4|脱|tuō|||||to take off, to shed|
+4|袜子|wàzi|||||socks|
+4|外出|wàichū|||||to go out, to leave home|
+4|外套|wàitào|||||coat, jacket|
+4|完全|wánquán|||||complete, total; completely, absolutely|
+4|晚安|wǎn’ān|||||good night|
+4|晚餐|wǎncān|||||dinner, supper|
+4|网购|wǎnggòu|||||to shop online|
+4|往往|wǎngwǎng|||||often, frequently|
+4|网页|wǎngyè|||||webpage|
+4|网友|wǎngyǒu|||||netizen, internet user|
+4|网址|wǎngzhǐ|||||website URL, web address|
+4|危险|wēixiǎn|||||dangerous; danger|
+4|为|wéi|||||to do, to act, to serve as|为#2
+4|味|wèi|||||taste, flavor|
+4|味道|wèidào|||||taste, flavor|
+4|卫生|wèishēng|||||hygiene, sanitation; clean, hygienic|
+4|温度|wēndù|||||temperature|
+4|闻|wén|||||to smell, to sniff|
+4|文件|wénjiàn|||||document, file|
+4|文章|wénzhāng|||||essay, article|
+4|文字|wénzì|||||writing, character|
+4|污染|wūrǎn|||||contaminated|
+4|无|wú|||||to lack, to not have|
+4|无法|wúfǎ|||||unable, incapable|
+4|无聊|wúliáo|||||boring, dull|
+4|无论|wúlùn|||||no matter what, regardless|
+4|午餐|wǔcān|||||lunch|
+4|误会|wùhuì|||||to misunderstand; misunderstanding|
+4|吸|xī|||||to suck, to inhale, to absorb|
+4|西部|xībù|||||western region, west part|
+4|西红柿|xīhóngshì|||||tomato|
+4|吸引|xīyǐn|||||to attract|
+4|细|xì|||||thin, fine, detailed|
+4|细心|xìxīn|||||careful, attentive|
+4|下降|xiàjiàng|||||to decline, to drop, to go down|
+4|鲜|xiān|||||fresh|
+4|鲜花|xiānhuā|||||fresh flower|
+4|咸|xián|||||salty|
+4|现金|xiànjīn|||||cash|
+4|羡慕|xiànmù|||||to envy, to admire|
+4|线上|xiànshàng|||||online, on the internet|
+4|线下|xiànxià|||||offline|
+4|现有|xiànyǒu|||||existing, currently available; to have currently|
+4|香|xiāng|||||fragrant|
+4|相比|xiāngbǐ|||||to compare with, to contrast|
+4|相反|xiāngfǎn|||||opposite, contrary; on the contrary|
+4|相互|xiānghù|||||mutual, each other|
+4|相同|xiāngtóng|||||same, identical|
+4|详细|xiángxì|||||detailed, thorough|
+4|响|xiǎng|||||to make a sound, to ring; loud|
+4|想法|xiǎngfǎ|||||thought, idea, opinion|
+4|项|xiàng|||||measure word for projects, items|
+4|消息|xiāoxi|||||news, message, information|
+4|小吃|xiǎochī|||||snack, light meal|
+4|小伙子|xiǎohuǒzi|||||young man, lad|
+4|小说|xiǎoshuō|||||novel, fiction|
+4|小组|xiǎozǔ|||||small group, team|
+4|效果|xiàoguǒ|||||effect, result|
+4|笑话|xiàohua|||||joke, laughter; to joke, to laugh at|
+4|血|xiě|||||blood|
+4|心|xīn|||||heart|
+4|辛苦|xīnkǔ|||||hard, laborious; to work hard, to toil|
+4|心情|xīnqíng|||||mood, feeling|
+4|信号|xìnhào|||||signal|
+4|信息|xìnxī|||||information, message|
+4|信心|xìnxīn|||||confidence, faith|
+4|兴奋|xīngfèn|||||excited, thrilled; to excite, to get excited|
+4|星星|xīngxing|||||star|
+4|醒|xǐng|||||to wake up, to sober up|
+4|性|xìng|||||suffix meaning nature, character, quality|
+4|性别|xìngbié|||||gender, sex|
+4|幸福|xìngfú|||||happiness; happy, blissful|
+4|性格|xìnggé|||||character|
+4|兄弟|xiōngdì|||||brothers|
+4|熊|xióng|||||bear|
+4|修|xiū|||||to repair, to fix|
+4|修理|xiūlǐ|||||to repair, to fix|
+4|许多|xǔduō|||||many, numerous|
+4|学费|xuéfèi|||||tuition fee|
+4|学院|xuéyuàn|||||college, academy, institute|
+4|压|yā|||||to press, to push down, to weigh down|
+4|压力|yālì|||||pressure, stress|
+4|牙膏|yágāo|||||toothpaste|
+4|亚洲|Yàzhōu|||||Asia|
+4|烟|yān|||||cigarette, smoke, mist|
+4|盐|yán|||||salt|
+4|严格|yángé|||||strict, stringent; to restrict strictly|
+4|研究|yánjiū|||||to research, to study|
+4|研究生|yánjiūshēng|||||graduate student, postgraduate|
+4|严重|yánzhòng|||||serious, severe, grave|
+4|演|yǎn|||||to act, to perform, to play|
+4|演唱|yǎnchàng|||||to sing, to perform vocally|
+4|演出|yǎnchū|||||to perform, to put on a show|
+4|眼镜|yǎnjìng|||||eyeglasses, glasses|
+4|眼前|yǎnqián|||||before one's eyes, at the moment|
+4|演员|yǎnyuán|||||actor, performer|
+4|阳光|yángguāng|||||sunlight, sunshine|
+4|养成|yǎngchéng|||||to develop, to cultivate, to form|
+4|样子|yàngzi|||||appearance, look, manner|
+4|邀请|yāoqǐng|||||to invite|
+4|要是|yàoshi|||||if, suppose|
+4|钥匙|yàoshi|||||key|
+4|也许|yěxǔ|||||maybe, perhaps|
+4|夜|yè|||||night; measure word for segments of the night|
+4|夜晚|yèwǎn|||||night, evening|
+4|叶子|yèzi|||||Leaf|
+4|一切|yíqiè|||||everything|
+4|已|yǐ|||||already|
+4|以内|yǐnèi|||||within|
+4|意见|yìjiàn|||||opinion|
+4|一生|yìshēng|||||lifetime, all one's life|
+4|艺术|yìshù|||||art|
+4|因此|yīncǐ|||||therefore|
+4|引起|yǐnqǐ|||||cause|
+4|印象|yìnxiàng|||||impression|
+4|赢|yíng|||||win|
+4|赢得|yíngdé|||||gain, win|
+4|应聘|yìngpìn|||||to apply for a job, to respond to a job advertisement|
+4|勇敢|yǒnggǎn|||||brave, courageous|
+4|永远|yǒngyuǎn|||||forever, always; eternity, forever|
+4|用来|yònglái|||||to be used for, to serve as|
+4|用于|yòngyú|||||to be used for, to be applied to|
+4|优点|yōudiǎn|||||advantage, merit, strong point|
+4|幽默|yōumò|||||humorous|
+4|优秀|yōuxiù|||||excellent, outstanding|
+4|由|yóu|||||by, through, from, because of|
+4|油|yóu|||||oil, fat, grease|
+4|尤其|yóuqí|||||especially, particularly|
+4|游玩|yóuwán|||||to play, to have fun, to go sightseeing|
+4|由于|yóuyú|||||because of, due to; owing to|
+4|友好|yǒuhǎo|||||friendly|
+4|友情|yǒuqíng|||||friendship|
+4|有趣|yǒuqù|||||interesting, enjoyable, fun|
+4|有效|yǒuxiào|||||effective, to be effective|
+4|友谊|yǒuyì|||||friendship|
+4|有着|yǒuzhe|||||to have, to possess|
+4|愉快|yúkuài|||||pleasant, cheerful|
+4|于是|yúshì|||||therefore, hence, so|
+4|与|yǔ|||||with, and|
+4|语法|yǔfǎ|||||grammar|
+4|预习|yùxí|||||to preview, to prepare|
+4|原来|yuánlái|||||original, former; originally, actually|
+4|原谅|yuánliàng|||||to forgive, to excuse, to pardon|
+4|原因|yuányīn|||||cause, reason|
+4|远离|yuǎnlí|||||to stay away from, to keep away from|
+4|院长|yuànzhǎng|||||dean, head of a college or institute|
+4|院子|yuànzi|||||courtyard, yard|
+4|约|yuē|||||to make an appointment, to arrange; about, approximately|
+4|约会|yuēhuì|||||to date, to meet up; date, appointment|
+4|月饼|yuèbing|||||mooncake|
+4|阅读|yuèdú|||||to read, to read aloud|
+4|月份|yuèfèn|||||month|
+4|云|yún|||||cloud|
+4|允许|yǔnxǔ|||||to permit, to allow, to give permission|
+4|杂志|zázhì|||||magazine|
+4|再次|zàicì|||||once again, once more|
+4|再说|zàishuō|||||to put off, to postpone; besides, moreover|
+4|暂时|zànshí|||||temporary, for the time being|
+4|暂停|zàntíng|||||to suspend, to pause|
+4|早餐|zǎocān|||||breakfast|
+4|早晨|zǎochen|||||morning|
+4|责任|zérèn|||||responsibility, duty|
+4|增加|zēngjiā|||||to increase, to add, to raise|
+4|增长|zēngzhǎng|||||to increase, to grow, to rise|
+4|招聘|zhāopìn|||||to recruit, to hire|
+4|着|zháo|||||to touch, to get to, to catch (fire)|着#2
+4|着火|zháohuǒ|||||to catch fire, to ignite|
+4|者|zhě|||||suffix meaning person, one who|
+4|真正|zhēnzhèng|||||true, genuine; truly, indeed|
+4|整|zhěng|||||whole, complete, entire|
+4|整个|zhěnggè|||||whole, entire, all|
+4|整理|zhěnglǐ|||||to arrange, to put in order, to tidy up|
+4|证|zhèng|||||certificate, proof, evidence|
+4|正常|zhèngcháng|||||normal, regular, proper|
+4|正好|zhènghǎo|||||exactly right, just in time; coincidentally|
+4|证件|zhèngjiàn|||||ID card, credentials, identification papers|
+4|证明|zhèngmíng|||||to prove, to demonstrate; proof, certificate|
+4|正确|zhèngquè|||||correct, right, accurate|
+4|正式|zhèngshì|||||formal, official|
+4|之|zhī|||||auxiliary word (classical)|
+4|支持|zhīchí|||||to support, to back|
+4|支付|zhīfù|||||to pay (money)|
+4|之后|zhīhòu|||||after, later, behind|
+4|之间|zhījiān|||||between, among|
+4|之前|zhīqián|||||before, prior to|
+4|知识|zhīshi|||||knowledge|
+4|之中|zhīzhōng|||||among, inside|
+4|值|zhí|||||to be worth, to be equal in value; valuable, worthwhile|
+4|值得|zhídé|||||to be worth, to deserve|
+4|直接|zhíjiē|||||direct, straightforward|
+4|植物|zhíwù|||||plant, vegetation|
+4|职业|zhíyè|||||occupation, profession|
+4|指|zhǐ|||||to point to, to indicate|
+4|指出|zhǐchū|||||to point out, to indicate|
+4|只好|zhǐhǎo|||||have to, be forced to|
+4|纸巾|zhǐjīn|||||tissue paper, napkin|
+4|质量|zhìliàng|||||quality|
+4|至少|zhìshǎo|||||at least|
+4|中餐|zhōngcān|||||Chinese food, Chinese meal|
+4|中年|zhōngnián|||||middle age|
+4|种|zhòng|||||to plant, to grow|种#2
+4|重|zhòng|||||weight, importance; heavy, important|重#2
+4|重点|zhòngdiǎn|||||key point, emphasis; mainly, emphatically|
+4|重视|zhòngshì|||||to pay attention to, to value|
+4|周围|zhōuwéi|||||around, surrounding|
+4|主意|zhǔyi|||||idea, thought, plan|
+4|祝|zhù|||||to wish, to express good wishes|
+4|祝贺|zhùhè|||||to congratulate, to offer congratulations|
+4|著名|zhùmíng|||||famous, well-known|
+4|专门|zhuānmén|||||specially, specifically; special|
+4|专业|zhuānyè|специальность|她的专业是历史。|Tā de zhuānyè shì lìshǐ.|Её специальность — история.|specialty, major; professional, specialized|
+4|转|zhuǎn|||||to turn, to shift, to transfer|
+4|转发|zhuǎnfā|||||to forward (a message), to retweet|
+4|转机|zhuǎnjī|||||to transfer (flight), to change planes|
+4|赚|zhuàn|||||to earn, to make a profit|
+4|装|zhuāng|||||to load, to pack, to pretend, to install|
+4|准|zhǔn|||||accurate, exact, standard; (definitely, certainly)|
+4|准确|zhǔnquè|||||accurate, precise|
+4|准时|zhǔnshí|||||on time, punctual|
+4|资料|zīliào|||||materials, data, information|
+4|仔细|zǐxì|||||careful, attentive, meticulous|
+4|自|zì|||||from, since, oneself|
+4|自然|zìrán|||||nature; natural; naturally, of course|
+4|自习|zìxí|||||to study on one's own|
+4|自信|zìxìn|||||to believe in oneself; self- confidence, confidence; confident|
+4|自学|zìxué|||||to teach oneself, to self-study|
+4|总结|zǒngjié|||||to summarize, to sum up; summary|
+4|租|zū|||||to rent, to hire|
+4|组|zǔ|||||group, team; (to organize; measure word for groups)|
+4|最终|zuìzhōng|||||final, ultimate|
+4|尊重|zūnzhòng|||||to respect, to value; respected|
+4|左右|zuǒyòu|||||about, around, left and right; (to control)|
+4|座|zuò|||||seat, place; measure word for seats|
+4|做法|zuòfǎ|||||way of doing things, practice|
+4|作家|zuòjiā|||||writer, author|
+4|做梦|zuòmèng|||||to dream, to have a dream|
+4|作品|zuòpǐn|||||work, composition, creation|
+4|作为|zuòwéi|||||to act as, to serve as; as, being|
+4|座位|zuòwèi|||||seat|
+4|作文|zuòwén|||||composition; to write a composition|
+4|作用|zuòyòng|||||function, role; (to serve as, to play a role)|
+4|作者|zuòzhě|||||author, writer|`;
+const R0=`
+`;
+const $=s=>document.querySelector(s),LV=['Все','HSK 1','HSK 2','HSK 3','HSK 4'],KEY='hsk-app-v1';
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let S=null;try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!S||!S.p)S={p:[{n:'Я',c:{},l:{}},{n:'Она',c:{},l:{}}],u:0,x:[],lim:10,lv:0,dir:0};
+const TG=window.Telegram&&Telegram.WebApp&&Telegram.WebApp.initData?Telegram.WebApp:null,CS=TG&&TG.CloudStorage,NCH=32;let cloudOK=true;
+const hs=s=>{let h=0;for(const ch of s)h=(h*31+ch.codePointAt(0))>>>0;return h%NCH};
+const cget=ks=>new Promise(r=>{setTimeout(()=>r(null),4000);try{CS.getItems(ks,(e,v)=>r(e?null:v||{}))}catch(e){r(null)}});
+const cset=(k,v)=>{try{CS.setItem(k,v,()=>{})}catch(e){}};
+function save(h){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
+if(!CS||!cloudOK)return;const p=P();
+const ks=h==='*'?[...Array(NCH).keys()]:h!==undefined?[hs(h)]:[];
+ks.forEach(k=>{const o={};for(const id in p.c)if(hs(id)==k){const c=p.c[id];o[id]=[+c.e.toFixed(2),c.i,c.r,Math.round(c.d/6e4)]}cset('c'+k,JSON.stringify(o))});
+cset('m',JSON.stringify({lim:S.lim,lv:S.lv,dir:S.dir,l:Object.fromEntries(Object.entries(p.l).sort().slice(-60))}))}
+const P=()=>S.p[S.u],day=()=>new Date().toLocaleDateString('sv-SE');
+const parse=t=>t.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{const a=l.split(/\||\t/);return a.length>=4?{lv:+a[0]||4,h:a[1].trim(),py:a[2].trim(),ru:a[3].trim(),ex:a[4]||'',ep:a[5]||'',er:a[6]||'',en:(a[7]||'').trim(),id:(a[8]||a[1]).trim()}:null}).filter(Boolean);
+let _W=null;const RU=Object.fromEntries(R0.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{const i=l.indexOf('=');return[l.slice(0,i),l.slice(i+1)]}));
+const words=()=>_W||(_W=[...new Map([...parse(W0),...S.x.map(w=>({...w,id:w.id||w.h}))].map(w=>[w.id,w])).values()].map(w=>RU[w.id]?{...w,ru:RU[w.id]}:w).sort((a,b)=>a.lv-b.lv));
+const wd=h=>words().find(x=>x.id==h);
+let Q=[],cur=null,flip=false,tab='study';
+function streak(p){let n=0,d=new Date();if(!(p.l[d.toLocaleDateString('sv-SE')]||{}).r)d.setDate(d.getDate()-1);
+while((p.l[d.toLocaleDateString('sv-SE')]||{}).r){n++;d.setDate(d.getDate()-1)}return n}
+function build(){const p=P(),now=Date.now(),ws=words().filter(w=>!S.lv||w.lv==S.lv);
+const due=ws.filter(w=>p.c[w.id]&&p.c[w.id].d<=now),done=(p.l[day()]||{}).n||0;
+const nw=ws.filter(w=>!p.c[w.id]).slice(0,Math.max(0,S.lim-done));
+Q=[...due,...nw].map(w=>w.id);next()}
+function next(){cur=Q.shift()||null;flip=false;render()}
+function grade(g){const p=P(),h=cur,now=Date.now(),isNew=!p.c[h];let c=p.c[h]||{e:2.5,i:0,r:0,d:now};
+if(g==0){c.r=0;c.i=0;c.e=Math.max(1.3,c.e-.2);c.d=now+6e5;Q.push(h)}
+else{if(g==1){c.i=Math.max(1,Math.round(c.i*1.2));c.e=Math.max(1.3,c.e-.15)}
+else if(g==2){c.i=c.r==0?1:c.r==1?3:Math.round(c.i*c.e)}
+else{c.i=c.r==0?3:Math.round(Math.max(c.i,1)*c.e*1.3);c.e+=.1}
+c.r++;c.d=now+c.i*864e5}
+p.c[h]=c;const l=p.l[day()]=p.l[day()]||{n:0,r:0};l.r++;if(isNew)l.n++;save(h);next()}
+function say(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='zh-CN';u.rate=.8;speechSynthesis.speak(u)}catch(e){}}
+function sayW(k){const w=wd(cur);if(w)say(k?w.ex:w.h)}
+const go=t=>{tab=t;render()};
+function render(){
+$('#top').innerHTML=`<span class=lg>汉语 HSK</span><span class=mu>${esc(P().n)}</span>`;
+$('#app').innerHTML={study:vStudy,list:vList,prog:vProg,more:vMore}[tab]();
+document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t==tab));
+if(tab=='list')L()}
+function vStudy(){const w=cur&&wd(cur);
+let h=`<div class=row><select onchange="S.lv=+this.value;save();build()">${LV.map((t,i)=>`<option value=${i} ${i==S.lv?'selected':''}>${t}</option>`).join('')}</select><select onchange="S.dir=+this.value;save();render()"><option value=0 ${S.dir?'':'selected'}>汉字 → перевод</option><option value=1 ${S.dir?'selected':''}>перевод → 汉字</option></select></div>`;
+if(!w)return h+`<div class="card c"><div class=big>🎉</div><p>На сегодня всё. Возвращайтесь позже или увеличьте число новых слов в день во вкладке «Ещё».</p><button class=pri onclick=build()>Обновить</button></div>`;
+h+=`<div class=cnt>Осталось: ${Q.length+1}</div><div class="card c" ${flip?'':'onclick="flip=true;render()"'}>${S.dir?`<div class=ru>${esc(w.ru||w.en)}</div>`:`<div class=hz>${esc(w.h)}</div>`}`;
+if(!flip)return h+`<p class=mu>Нажмите, чтобы увидеть ответ</p></div>`;
+h+=`${S.dir?`<div class=hz>${esc(w.h)}</div>`:''}<div class=py>${esc(w.py)} <button class=sp onclick="sayW(0)">🔊</button></div>${S.dir?'':`<div class=ru>${esc(w.ru||w.en)}</div>`}`;
+if(w.ex)h+=`<div class=ex>${esc(w.ex)} <button class=sp onclick="sayW(1)">🔊</button><br><span class=mu>${esc(w.ep)}</span><br>${esc(w.er)}</div>`;
+return h+`</div><div class=g4>${['Снова','Трудно','Хорошо','Легко'].map((t,i)=>`<button class=g${i} onclick="grade(${i})">${t}</button>`).join('')}</div>`}
+function vList(){return `<div class=row><input id=q placeholder="Поиск" oninput="L()"><select id=fl onchange="L()">${LV.map((t,i)=>`<option value=${i}>${t}</option>`).join('')}</select></div><div id=list></div>`}
+function L(){const q=($('#q').value||'').toLowerCase(),f=+$('#fl').value,p=P();
+$('#list').innerHTML=words().filter(w=>(!f||w.lv==f)&&(!q||(w.h+w.py+w.ru+w.en).toLowerCase().includes(q))).slice(0,2500).map(w=>{const c=p.c[w.id];return `<div class=wr><div><b class=wh>${esc(w.h)}</b> <span class=mu>${esc(w.py)}</span><br>${esc(w.ru||w.en)}</div><span class=bd>HSK ${w.lv}<br>${c?(c.i>=21?'✓ выучено':'● учу'):'○ новое'}</span></div>`}).join('')||'<p class=mu>Ничего не найдено</p>'}
+function vProg(){const p=P(),ws=words(),l=p.l[day()]||{n:0,r:0};
+let h=`<div class=card><b>Сегодня:</b> повторений ${l.r||0}, новых слов ${l.n||0}<br><b>Серия:</b> ${streak(p)} дн.</div>`;
+[1,2,3,4].forEach(v=>{const a=ws.filter(w=>w.lv==v),s=a.filter(w=>p.c[w.id]),m=s.filter(w=>p.c[w.id].i>=21),pc=a.length?Math.round(s.length/a.length*100):0;
+h+=`<div class=card><b>HSK ${v}</b> <span class=mu>всего ${a.length}, начато ${s.length}, выучено ${m.length}</span><div class=bar><i style="width:${pc}%"></i></div></div>`});
+return h}
+function vMore(){return `<div class=card><b>Новых слов в день</b><div class=row><input id=lm type=number min=1 max=100 value=${S.lim}><button onclick="S.lim=Math.max(1,+$('#lm').value||10);save();alert('Сохранено')">Сохранить</button></div></div>
+<div class=card><b>Добавить слова</b><p class=mu>Одно слово в строке: уровень|иероглиф|пиньинь|перевод|пример|пиньинь примера|перевод примера. Пример можно не указывать.</p><textarea id=im rows=6></textarea><button class=pri onclick=imp()>Добавить слова</button></div>
+<div class=card><b>Перенос прогресса на другое устройство</b><p class=mu>Скопируйте текст ниже и вставьте его в поле на другом устройстве.</p><textarea id=ex rows=3 readonly onclick=this.select()>${esc(JSON.stringify(S))}</textarea><textarea id=bk rows=3 placeholder="Вставьте сюда копию"></textarea><button onclick=rst()>Восстановить</button></div>`}
+function imp(){const a=parse($('#im').value);S.x=[...new Map([...S.x,...a].map(w=>[w.id,w])).values()];save();$('#im').value='';_W=null;alert('Добавлено слов: '+a.length)}
+function rst(){try{const o=JSON.parse($('#bk').value);if(!o.p)throw 0;S=o;_W=null;save('*');build();alert('Прогресс восстановлен')}catch(e){alert('Не удалось прочитать копию')}}
+function theme(){const t=TG.themeParams||{},r=document.documentElement.style,m={'--bg':t.secondary_bg_color||t.bg_color,'--card':t.bg_color,'--tx':t.text_color,'--mu':t.hint_color,'--ac':t.button_color,'--on':t.button_text_color,'--bd':t.hint_color&&t.hint_color+'44'};for(const k in m)if(m[k])r.setProperty(k,m[k]);try{TG.setHeaderColor('secondary_bg_color')}catch(e){}}
+async function init(){
+if(TG){TG.ready();TG.expand();theme();TG.onEvent('themeChanged',theme);
+if(CS){const v=await cget(['m',...Array.from({length:NCH},(_,i)=>'c'+i)]);
+if(!v)cloudOK=false;else try{if(Object.values(v).some(Boolean)){const p=P(),c={};
+for(let i=0;i<NCH;i++)if(v['c'+i]){const o=JSON.parse(v['c'+i]);for(const id in o){const a=o[id];c[id]={e:a[0],i:a[1],r:a[2],d:a[3]*6e4}}}
+p.c=c;if(v.m){const m=JSON.parse(v.m);S.lim=m.lim||S.lim;S.lv=m.lv||0;S.dir=m.dir||0;p.l=m.l||{}}}else save('*')}catch(e){cloudOK=false}}
+P().n=(TG.initDataUnsafe.user||{}).first_name||P().n}
+build()}
+init();
+</script></body></html>
