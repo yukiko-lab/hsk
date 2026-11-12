@@ -35,17 +35,22 @@ input{flex:1;min-width:0}
 nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--card);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom,0px)}
 nav button{flex:1;border:0;border-radius:0;background:none;padding:14px 2px;font-size:13px;color:var(--mu)}
 nav .on{color:var(--ac);font-weight:700}
+.rd{font-size:22px;line-height:2;font-family:'Songti SC','STSong','Noto Serif SC',serif}.rw.n{border-bottom:2px solid var(--ac)}.rw.l{border-bottom:2px dotted var(--mu)}
+#pop{display:none;position:fixed;left:8px;right:8px;bottom:calc(64px + env(safe-area-inset-bottom,0px));max-width:620px;margin:auto;background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:12px;box-shadow:0 4px 20px #0004;z-index:5}
 </style></head>
 <body>
 <div class="w"><div id="top"></div><div id="app"></div></div>
+<div id=pop></div>
 <nav>
 <button data-t="study" onclick="go('study')">Карточки</button>
 <button data-t="list" onclick="go('list')">Слова</button>
-<button data-t="prog" onclick="go('prog')">Прогресс</button>
+<button data-t="read" onclick="go('read')">Читать</button>
 <button data-t="gram" onclick="go('gram')">Грамматика</button>
 <button data-t="more" onclick="go('more')">Ещё</button>
 </nav>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 const W0=`1|爱|ài|||||to love|
 1|八|bā|||||eight|
@@ -2087,9 +2092,9 @@ function sayW(k){const w=wd(cur);if(w)say(k?w.ex:w.h)}
 const go=t=>{tab=t;render()};
 function render(){
 $('#top').innerHTML=`<span class=lg>汉语 HSK</span><span class=mu>${esc(P().n)}</span>`;
-$('#app').innerHTML={study:vStudy,list:vList,prog:vProg,gram:vGram,more:vMore}[tab]();
+$('#app').innerHTML={study:vStudy,list:vList,prog:vProg,gram:vGram,read:vRead,more:vMore}[tab]();
 document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t==tab));
-if(tab=='list')L()}
+if(tab=='list')L();if(tab=='read'&&RD.n)showPg()}
 function vStudy(){const w=cur&&wd(cur);
 let h=`<div class=row><select onchange="S.lv=+this.value;save();build()">${LV.map((t,i)=>`<option value=${i} ${i==S.lv?'selected':''}>${t}</option>`).join('')}</select><select onchange="S.dir=+this.value;save();render()"><option value=0 ${S.dir?'':'selected'}>汉字 → перевод</option><option value=1 ${S.dir?'selected':''}>перевод → 汉字</option></select></div>`;
 if(!w)return h+`<div class="card c"><div class=big>🎉</div><p>На сегодня всё. Возвращайтесь позже или увеличьте число новых слов в день во вкладке «Ещё».</p><button class=pri onclick=build()>Обновить</button></div>`;
@@ -2108,7 +2113,29 @@ h+=`<div class=card><b>HSK ${v}</b> <span class=mu>всего ${a.length}, на�
 return h}
 let GR=[];
 function vGram(){return GR.length?GR.map((g,i)=>`<div class=card><span class=bd style="float:right">HSK ${esc(g.lv)}</span><b>${esc(g.p)}</b><p>${esc(g.t)}</p><div class=ex>${esc(g.ex)} <button class=sp onclick="say(GR[${i}].ex)">🔊</button><br><span class=mu>${esc(g.ep)}</span><br>${esc(g.er)}</div></div>`).join(''):'<p class=mu>Файл grammar.txt не найден: загрузите его рядом с index.html.</p>'}
-function vMore(){return `<div class=card><b>Новых слов в день</b><div class=row><input id=lm type=number min=1 max=100 value=${S.lim}><button onclick="S.lim=Math.max(1,+$('#lm').value||10);save();alert('Сохранено')">Сохранить</button></div></div>
+if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+let RD={n:'',p:0,t:0,get:null};
+const splitTxt=t=>{const a=[];let b='';for(const l of t.split('\n')){b+=l+'\n';if(b.length>1500){a.push(b);b=''}}if(b.trim())a.push(b);return a};
+function setRD(n,pg){RD={n,p:0,t:pg.length,get:async i=>pg[i]||''};render()}
+async function openFile(f){if(!f)return;const n=f.name.toLowerCase();
+try{if(n.endsWith('.pdf')){if(!window.pdfjsLib)throw 0;const pdf=await pdfjsLib.getDocument({data:await f.arrayBuffer()}).promise;
+RD={n:f.name,p:0,t:pdf.numPages,get:async i=>{const c=await(await pdf.getPage(i+1)).getTextContent();return c.items.map(x=>x.str+(x.hasEOL?'\n':'')).join('')}};render()}
+else if(n.endsWith('.epub')){if(!window.JSZip)throw 0;const z=await JSZip.loadAsync(await f.arrayBuffer()),pg=[];
+for(const k of Object.keys(z.files).filter(k=>/\.x?html?$/i.test(k)).sort()){const d=new DOMParser().parseFromString(await z.files[k].async('string'),'text/html');d.querySelectorAll('rt,rp,script,style').forEach(x=>x.remove());const t=(d.body.textContent||'').trim();if(t)pg.push(t)}
+setRD(f.name,pg)}
+else setRD(f.name,splitTxt(await f.text()))}catch(e){alert('Не удалось открыть файл')}}
+async function showPg(){const t=await RD.get(RD.p),el=$('#rdtxt');if(el)el.innerHTML=t.trim()?seg(t):'<p class=mu>На этой странице нет текста (возможно, это скан или картинка).</p>'}
+function rp(d){RD.p=Math.min(Math.max(0,RD.p+d),RD.t-1);$('#pn').textContent=RD.n+': стр. '+(RD.p+1)+' из '+RD.t;showPg();scrollTo(0,0)}
+function seg(t){const D=new Map();words().forEach(w=>{if(!D.has(w.h))D.set(w.h,w)});const st=P().c;let o='',i=0;
+while(i<t.length){const ch=t[i];if(/[\u4e00-\u9fff]/.test(ch)){let m=null;for(let L=Math.min(6,t.length-i);L>0;L--){const s=t.substr(i,L);if(D.has(s)){m=s;break}}
+if(m){const c=st[D.get(m).id];o+=`<span class="rw ${c?(c.i>=21?'k':'l'):'n'}" data-h="${m}">${m}</span>`;i+=m.length}else{o+=ch;i++}}
+else{o+=ch=='\n'?'<br>':esc(ch);i++}}return o}
+function vRead(){return `<div class=card><b>Читатель</b><p class=mu>Откройте свой файл (PDF, EPUB, TXT) или вставьте текст. Файл не покидает ваше устройство. Нажмите на слово, чтобы увидеть пиньинь и перевод. Сплошное подчёркивание — слово новое, пунктир — учите, без линии — выучено.</p><input type=file accept=".pdf,.epub,.txt" onchange="openFile(this.files[0])" style="width:100%"><textarea id=pt rows=3 placeholder="Или вставьте китайский текст"></textarea><button onclick="setRD('Текст',splitTxt($('#pt').value))">Читать вставленный текст</button></div>`+(RD.n?`<div class=row><button onclick="rp(-1)">←</button><span id=pn class=mu style="flex:1;text-align:center">${esc(RD.n)}: стр. ${RD.p+1} из ${RD.t}</span><button onclick="rp(1)">→</button></div><div class="card rd" id=rdtxt></div>`:'')}
+document.addEventListener('click',e=>{const pop=$('#pop'),t=e.target.closest('.rw');
+if(!t){if(!e.target.closest('#pop'))pop.style.display='none';return}
+const w=words().find(x=>x.h==t.dataset.h);if(!w)return;
+pop.innerHTML=`<b class=wh style="font-size:26px">${esc(w.h)}</b> <span class=py>${esc(w.py)}</span> <button class=sp onclick="say('${w.h}')">🔊</button><br>${esc(w.ru||w.en)} <span class=mu>· HSK ${w.lv}</span>`+(w.ex?`<div class=ex>${esc(w.ex)}<br><span class=mu>${esc(w.ep)}</span><br>${esc(w.er)}</div>`:'');pop.style.display='block'});
+function vMore(){return vProg()+`<div class=card><b>Новых слов в день</b><div class=row><input id=lm type=number min=1 max=100 value=${S.lim}><button onclick="S.lim=Math.max(1,+$('#lm').value||10);save();alert('Сохранено')">Сохранить</button></div></div>
 <div class=card><b>Добавить слова</b><p class=mu>Одно слово в строке: уровень|иероглиф|пиньинь|перевод|пример|пиньинь примера|перевод примера. Пример можно не указывать.</p><textarea id=im rows=6></textarea><button class=pri onclick=imp()>Добавить слова</button></div>
 <div class=card><b>Перенос прогресса на другое устройство</b><p class=mu>Скопируйте текст ниже и вставьте его в поле на другом устройстве.</p><textarea id=ex rows=3 readonly onclick=this.select()>${esc(JSON.stringify(S))}</textarea><textarea id=bk rows=3 placeholder="Вставьте сюда копию"></textarea><button onclick=rst()>Восстановить</button></div>`}
 function imp(){const a=parse($('#im').value);S.x=[...new Map([...S.x,...a].map(w=>[w.id,w])).values()];save();$('#im').value='';_W=null;alert('Добавлено слов: '+a.length)}
