@@ -33,7 +33,7 @@ input{flex:1;min-width:0}
 .bd{font-size:12px;color:var(--mu);text-align:right;white-space:nowrap}
 .bar{height:8px;background:var(--bd);border-radius:4px;margin-top:8px;overflow:hidden}.bar i{display:block;height:100%;background:var(--ok)}
 nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--card);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom,0px)}
-nav button{flex:1;border:0;border-radius:0;background:none;padding:14px 4px;color:var(--mu)}
+nav button{flex:1;border:0;border-radius:0;background:none;padding:14px 2px;font-size:13px;color:var(--mu)}
 nav .on{color:var(--ac);font-weight:700}
 </style></head>
 <body>
@@ -42,6 +42,7 @@ nav .on{color:var(--ac);font-weight:700}
 <button data-t="study" onclick="go('study')">Карточки</button>
 <button data-t="list" onclick="go('list')">Слова</button>
 <button data-t="prog" onclick="go('prog')">Прогресс</button>
+<button data-t="gram" onclick="go('gram')">Грамматика</button>
 <button data-t="more" onclick="go('more')">Ещё</button>
 </nav>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -149,7 +150,7 @@ const W0=`1|爱|ài|||||to love|
 1|看见|kànjiàn|||||to see|
 1|可以|kěyǐ|||||can, may; okay, fine|
 1|课|kè|||||class, lesson|
-1|又|kǒu|||||mouth; measure word for family members, bites|
+1|口|kǒu|||||mouth; measure word for family members, bites|
 1|块|kuài|||||measure word for pieces, chunks, money|
 1|来|lái|||||to come|
 1|老师|lǎoshī|||||teacher|
@@ -446,7 +447,7 @@ const W0=`1|爱|ài|||||to love|
 2|没意思|méi yìsi|||||boring, uninteresting|
 2|每|měi|||||every, each; (per)|
 2|门|mén|||||door, gate|
-2|门又|ménkǒu|||||doorway, entrance|
+2|门口|ménkǒu|||||doorway, entrance|
 2|门票|ménpiào|||||ticket|
 2|面|miàn|||||suffix indicating a person with a certain characteristic; (to face; side, aspect; measure word for flat objects)|
 2|名|míng|||||name, reputation; measure word for people|
@@ -808,7 +809,7 @@ const W0=`1|爱|ài|||||to love|
 3|留学生|liúxuéshēng|||||overseas student|
 3|楼梯|lóutī|||||stairs|
 3|路边|lùbiān|||||roadside|
-3|路又|lùkǒu|||||intersection|
+3|路口|lùkǒu|||||intersection|
 3|马|mǎ|||||horse|
 3|马路|mǎlù|||||road|
 3|马上|mǎshàng|||||immediately|
@@ -994,7 +995,7 @@ const W0=`1|爱|ài|||||to love|
 3|有关|yǒuguān|||||to have to do with; concerning|
 3|有名|yǒumíng|||||famous|
 3|有用|yǒuyòng|||||useful|
-3|又|yòu|||||again, also|又#2
+3|又|yòu|||||again, also|
 3|羽毛球|yǔmáoqiú|||||badminton|
 3|语言|yǔyán|||||language|
 3|雨衣|yǔyī|||||raincoat|
@@ -1134,7 +1135,7 @@ const W0=`1|爱|ài|||||to love|
 4|重|chóng|||||again, once more; (to repeat)|
 4|重新|chóngxīn|||||again, anew|
 4|出差|chūchāi|||||to go on a business trip|
-4|出又|chūkǒu|||||exit; (to export)|
+4|出口|chūkǒu|||||exit; (to export)|
 4|出现|chūxiàn|||||to appear, to emerge|
 4|出行|chūxíng|||||to travel, to go out|
 4|出租|chūzū|||||to rent out|
@@ -1485,7 +1486,7 @@ const W0=`1|爱|ài|||||to love|
 4|空气|kōngqì|||||atmosphere, air|
 4|恐怕|kǒngpà|||||to fear, to be afraid; I'm afraid, perhaps, maybe|
 4|空|kòng|||||to leave empty, to make time, to free up; empty, free, unoccupied; free time, empty space|空#2
-4|又语|kǒuyǔ|||||spoken language|
+4|口语|kǒuyǔ|||||spoken language|
 4|苦|kǔ|||||bitter|
 4|快餐|kuàicān|||||fast food|
 4|快递|kuàidì|||||express delivery|
@@ -1668,7 +1669,7 @@ const W0=`1|爱|ài|||||to love|
 4|日期|rìqī|||||date|
 4|日子|rìzi|||||day, life, time|
 4|入|rù|||||to enter, to go in|
-4|入又|rùkǒu|||||entrance|
+4|入口|rùkǒu|||||entrance|
 4|入学|rùxué|||||to enter school, to enroll|
 4|入住|rùzhù|||||to check in, to move in|
 4|散步|sànbù|||||to take a walk, to stroll|
@@ -1710,7 +1711,7 @@ const W0=`1|爱|ài|||||to love|
 4|食堂|shítáng|||||cafeteria, dining hall|
 4|食物|shíwù|||||food|
 4|实在|shízài|||||honest, reliable; really, indeed|
-4|十字路又|shízì lùkǒu|||||intersection, crossroads|
+4|十字路口|shízì lùkǒu|||||intersection, crossroads|
 4|使|shǐ|||||to make, to cause, to use|
 4|使馆|shǐguǎn|||||embassy|
 4|使用|shǐyòng|||||to use, to employ|
@@ -2063,8 +2064,8 @@ ks.forEach(k=>{const o={};for(const id in p.c)if(hs(id)==k){const c=p.c[id];o[id
 cset('m',JSON.stringify({lim:S.lim,lv:S.lv,dir:S.dir,l:Object.fromEntries(Object.entries(p.l).sort().slice(-60))}))}
 const P=()=>S.p[S.u],day=()=>new Date().toLocaleDateString('sv-SE');
 const parse=t=>t.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{const a=l.split(/\||\t/);return a.length>=4?{lv:+a[0]||4,h:a[1].trim(),py:a[2].trim(),ru:a[3].trim(),ex:a[4]||'',ep:a[5]||'',er:a[6]||'',en:(a[7]||'').trim(),id:(a[8]||a[1]).trim()}:null}).filter(Boolean);
-let _W=null;const RU=Object.fromEntries(R0.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{const i=l.indexOf('=');return[l.slice(0,i),l.slice(i+1)]}));
-const words=()=>_W||(_W=[...new Map([...parse(W0),...S.x.map(w=>({...w,id:w.id||w.h}))].map(w=>[w.id,w])).values()].map(w=>RU[w.id]?{...w,ru:RU[w.id]}:w).sort((a,b)=>a.lv-b.lv));
+let _W=null;let RU={};const setRU=t=>{RU=Object.fromEntries(t.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{const i=l.indexOf('=');return[l.slice(0,i),l.slice(i+1).split('|')]}));_W=null};setRU(R0);
+const words=()=>_W||(_W=[...new Map([...parse(W0),...S.x.map(w=>({...w,id:w.id||w.h}))].map(w=>[w.id,w])).values()].map(w=>{const r=RU[w.id];return r?{...w,ru:r[0],...(r[1]?{ex:r[1],ep:r[2]||'',er:r[3]||''}:{})}:w}).sort((a,b)=>a.lv-b.lv));
 const wd=h=>words().find(x=>x.id==h);
 let Q=[],cur=null,flip=false,tab='study';
 function streak(p){let n=0,d=new Date();if(!(p.l[d.toLocaleDateString('sv-SE')]||{}).r)d.setDate(d.getDate()-1);
@@ -2086,7 +2087,7 @@ function sayW(k){const w=wd(cur);if(w)say(k?w.ex:w.h)}
 const go=t=>{tab=t;render()};
 function render(){
 $('#top').innerHTML=`<span class=lg>汉语 HSK</span><span class=mu>${esc(P().n)}</span>`;
-$('#app').innerHTML={study:vStudy,list:vList,prog:vProg,more:vMore}[tab]();
+$('#app').innerHTML={study:vStudy,list:vList,prog:vProg,gram:vGram,more:vMore}[tab]();
 document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t==tab));
 if(tab=='list')L()}
 function vStudy(){const w=cur&&wd(cur);
@@ -2105,6 +2106,8 @@ let h=`<div class=card><b>Сегодня:</b> повторений ${l.r||0}, н
 [1,2,3,4].forEach(v=>{const a=ws.filter(w=>w.lv==v),s=a.filter(w=>p.c[w.id]),m=s.filter(w=>p.c[w.id].i>=21),pc=a.length?Math.round(s.length/a.length*100):0;
 h+=`<div class=card><b>HSK ${v}</b> <span class=mu>всего ${a.length}, начато ${s.length}, выучено ${m.length}</span><div class=bar><i style="width:${pc}%"></i></div></div>`});
 return h}
+let GR=[];
+function vGram(){return GR.length?GR.map((g,i)=>`<div class=card><span class=bd style="float:right">HSK ${esc(g.lv)}</span><b>${esc(g.p)}</b><p>${esc(g.t)}</p><div class=ex>${esc(g.ex)} <button class=sp onclick="say(GR[${i}].ex)">🔊</button><br><span class=mu>${esc(g.ep)}</span><br>${esc(g.er)}</div></div>`).join(''):'<p class=mu>Файл grammar.txt не найден: загрузите его рядом с index.html.</p>'}
 function vMore(){return `<div class=card><b>Новых слов в день</b><div class=row><input id=lm type=number min=1 max=100 value=${S.lim}><button onclick="S.lim=Math.max(1,+$('#lm').value||10);save();alert('Сохранено')">Сохранить</button></div></div>
 <div class=card><b>Добавить слова</b><p class=mu>Одно слово в строке: уровень|иероглиф|пиньинь|перевод|пример|пиньинь примера|перевод примера. Пример можно не указывать.</p><textarea id=im rows=6></textarea><button class=pri onclick=imp()>Добавить слова</button></div>
 <div class=card><b>Перенос прогресса на другое устройство</b><p class=mu>Скопируйте текст ниже и вставьте его в поле на другом устройстве.</p><textarea id=ex rows=3 readonly onclick=this.select()>${esc(JSON.stringify(S))}</textarea><textarea id=bk rows=3 placeholder="Вставьте сюда копию"></textarea><button onclick=rst()>Восстановить</button></div>`}
@@ -2118,6 +2121,8 @@ if(!v)cloudOK=false;else try{if(Object.values(v).some(Boolean)){const p=P(),c={}
 for(let i=0;i<NCH;i++)if(v['c'+i]){const o=JSON.parse(v['c'+i]);for(const id in o){const a=o[id];c[id]={e:a[0],i:a[1],r:a[2],d:a[3]*6e4}}}
 p.c=c;if(v.m){const m=JSON.parse(v.m);S.lim=m.lim||S.lim;S.lv=m.lv||0;S.dir=m.dir||0;p.l=m.l||{}}}else save('*')}catch(e){cloudOK=false}}
 P().n=(TG.initDataUnsafe.user||{}).first_name||P().n}
+try{const r=await fetch('ru.txt?'+Date.now());if(r.ok)setRU(R0+'\n'+await r.text())}catch(e){}
+try{const r=await fetch('grammar.txt?'+Date.now());if(r.ok)GR=(await r.text()).split('\n').map(l=>l.split('|')).filter(a=>a.length>=6).map(a=>({lv:a[0],p:a[1],t:a[2],ex:a[3],ep:a[4],er:a[5]}))}catch(e){}
 build()}
 init();
 </script></body></html>
