@@ -35,6 +35,7 @@ input{flex:1;min-width:0}
 nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--card);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom,0px)}
 nav button{flex:1;border:0;border-radius:0;background:none;padding:14px 2px;font-size:13px;color:var(--mu)}
 nav .on{color:var(--ac);font-weight:700}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:14px}.qok{background:#2f855a;color:#fff;border-color:#2f855a}.qbad{background:#b42318;color:#fff;border-color:#b42318}
 </style></head>
 <body>
 <div class="w"><div id="top"></div><div id="app"></div></div>
@@ -2070,10 +2071,11 @@ const wd=h=>words().find(x=>x.id==h);
 let Q=[],cur=null,flip=false,tab='study';
 function streak(p){let n=0,d=new Date();if(!(p.l[d.toLocaleDateString('sv-SE')]||{}).r)d.setDate(d.getDate()-1);
 while((p.l[d.toLocaleDateString('sv-SE')]||{}).r){n++;d.setDate(d.getDate()-1)}return n}
+const shuf=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 function build(){const p=P(),now=Date.now(),ws=words().filter(w=>!S.lv||w.lv==S.lv);
 const due=ws.filter(w=>p.c[w.id]&&p.c[w.id].d<=now),done=(p.l[day()]||{}).n||0;
-const nw=ws.filter(w=>!p.c[w.id]).slice(0,Math.max(0,S.lim-done));
-Q=[...due,...nw].map(w=>w.id);next()}
+const nu=ws.filter(w=>!p.c[w.id]),nw=[...shuf(nu.filter(w=>w.ru)),...shuf(nu.filter(w=>!w.ru))].slice(0,Math.max(0,S.lim-done));
+Q=shuf([...due,...nw]).map(w=>w.id);next()}
 function next(){cur=Q.shift()||null;flip=false;render()}
 function grade(g){const p=P(),h=cur,now=Date.now(),isNew=!p.c[h];let c=p.c[h]||{e:2.5,i:0,r:0,d:now};
 if(g==0){c.r=0;c.i=0;c.e=Math.max(1.3,c.e-.2);c.d=now+6e5;Q.push(h)}
@@ -2090,8 +2092,22 @@ $('#top').innerHTML=`<span class=lg>汉语 HSK</span><span class=mu>${esc(P().n)
 $('#app').innerHTML={study:vStudy,list:vList,prog:vProg,gram:vGram,more:vMore}[tab]();
 document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t==tab));
 if(tab=='list')L()}
-function vStudy(){const w=cur&&wd(cur);
-let h=`<div class=row><select onchange="S.lv=+this.value;save();build()">${LV.map((t,i)=>`<option value=${i} ${i==S.lv?'selected':''}>${t}</option>`).join('')}</select><select onchange="S.dir=+this.value;save();render()"><option value=0 ${S.dir?'':'selected'}>汉字 → перевод</option><option value=1 ${S.dir?'selected':''}>перевод → 汉字</option></select></div>`;
+let QZ={on:0,w:null,o:[],a:null,ok:0,n:0};
+const tr=w=>w.ru||w.en;
+function quizNext(){const ws=words().filter(w=>!S.lv||w.lv==S.lv),w=ws[Math.floor(Math.random()*ws.length)];
+const all=words().filter(x=>x.id!=w.id&&!!x.ru==!!w.ru&&tr(x)!=tr(w)),pl=all.filter(x=>x.lv==w.lv),src=pl.length>=3?pl:all,o=[];
+shuf(src.slice()).forEach(x=>{if(o.length<3&&!o.some(y=>tr(y)==tr(x)))o.push(x)});
+QZ.w=w;QZ.o=shuf([w,...o]);QZ.a=null;render()}
+function quizStart(){QZ={on:1,w:null,o:[],a:null,ok:0,n:0};quizNext()}
+function quizAns(i){if(QZ.a!==null)return;QZ.a=i;QZ.n++;if(QZ.o[i].id==QZ.w.id)QZ.ok++;render()}
+function quizStop(){QZ.on=0;render()}
+function vQuiz(){const w=QZ.w,a=QZ.a;
+let h=`<div class=row><button onclick="quizStop()">← К карточкам</button><span class=mu style="flex:1;text-align:right;align-self:center">Верно: ${QZ.ok} из ${QZ.n}</span></div><div class="card c"><div class=hz>${esc(w.h)}</div><div class=py>${esc(w.py)} <button class=sp onclick="say('${w.h}')">🔊</button></div></div>`;
+h+=QZ.o.map((x,i)=>{let c='';if(a!==null)c=x.id==w.id?' qok':(i==a?' qbad':'');return `<button class="opt${c}" onclick="quizAns(${i})">${esc(tr(x))}</button>`}).join('');
+if(a!==null){if(w.ex)h+=`<div class=card><div class=ex style="border:0;margin:0;padding:0">${esc(w.ex)}<br><span class=mu>${esc(w.ep)}</span><br>${esc(w.er)}</div></div>`;h+=`<button class=pri style="width:100%;margin-top:8px" onclick="quizNext()">Дальше</button>`}
+return h}
+function vStudy(){if(QZ.on)return vQuiz();const w=cur&&wd(cur);
+let h=`<div class=row><select onchange="S.lv=+this.value;save();build()">${LV.map((t,i)=>`<option value=${i} ${i==S.lv?'selected':''}>${t}</option>`).join('')}</select><select onchange="S.dir=+this.value;save();render()"><option value=0 ${S.dir?'':'selected'}>汉字 → перевод</option><option value=1 ${S.dir?'selected':''}>перевод → 汉字</option></select></div><button class=pri style="width:100%;margin-bottom:10px" onclick="quizStart()">📝 Мини-тест</button>`;
 if(!w)return h+`<div class="card c"><div class=big>🎉</div><p>На сегодня всё. Возвращайтесь позже или увеличьте число новых слов в день во вкладке «Ещё».</p><button class=pri onclick=build()>Обновить</button></div>`;
 h+=`<div class=cnt>Осталось: ${Q.length+1}</div><div class="card c" ${flip?'':'onclick="flip=true;render()"'}>${S.dir?`<div class=ru>${esc(w.ru||w.en)}</div>`:`<div class=hz>${esc(w.h)}</div>`}`;
 if(!flip)return h+`<p class=mu>Нажмите, чтобы увидеть ответ</p></div>`;
