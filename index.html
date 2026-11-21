@@ -2062,7 +2062,7 @@ function save(h){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
 if(!CS||!cloudOK)return;const p=P();
 const ks=h==='*'?[...Array(NCH).keys()]:h!==undefined?[hs(h)]:[];
 ks.forEach(k=>{const o={};for(const id in p.c)if(hs(id)==k){const c=p.c[id];o[id]=[+c.e.toFixed(2),c.i,c.r,Math.round(c.d/6e4)]}cset('c'+k,JSON.stringify(o))});
-cset('m',JSON.stringify({lim:S.lim,lv:S.lv,dir:S.dir,l:Object.fromEntries(Object.entries(p.l).sort().slice(-60))}))}
+cset('m',JSON.stringify({lim:S.lim,lv:S.lv,dir:S.dir,sb:S.sb,l:Object.fromEntries(Object.entries(p.l).sort().slice(-60))}))}
 const P=()=>S.p[S.u],day=()=>new Date().toLocaleDateString('sv-SE');
 const parse=t=>t.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{const a=l.split(/\||\t/);return a.length>=4?{lv:+a[0]||4,h:a[1].trim(),py:a[2].trim(),ru:a[3].trim(),ex:a[4]||'',ep:a[5]||'',er:a[6]||'',en:(a[7]||'').trim(),id:(a[8]||a[1]).trim()}:null}).filter(Boolean);
 let _W=null;let RU={};const setRU=t=>{RU=Object.fromEntries(t.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{const i=l.indexOf('=');return[l.slice(0,i),l.slice(i+1).split('|')]}));_W=null};setRU(R0);
@@ -2083,7 +2083,7 @@ else{if(g==1){c.i=Math.max(1,Math.round(c.i*1.2));c.e=Math.max(1.3,c.e-.15)}
 else if(g==2){c.i=c.r==0?1:c.r==1?3:Math.round(c.i*c.e)}
 else{c.i=c.r==0?3:Math.round(Math.max(c.i,1)*c.e*1.3);c.e+=.1}
 c.r++;c.d=now+c.i*864e5}
-p.c[h]=c;const l=p.l[day()]=p.l[day()]||{n:0,r:0};l.r++;if(isNew)l.n++;save(h);next()}
+p.c[h]=c;const l=p.l[day()]=p.l[day()]||{n:0,r:0};l.r++;if(isNew)l.n++;save(h);lbPush();next()}
 function say(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='zh-CN';u.rate=.8;speechSynthesis.speak(u)}catch(e){}}
 function sayW(k){const w=wd(cur);if(w)say(k?w.ex:w.h)}
 const go=t=>{tab=t;render()};
@@ -2091,7 +2091,34 @@ function render(){
 $('#top').innerHTML=`<span class=lg>汉语 HSK</span><span class=mu>${esc(P().n)}</span>`;
 $('#app').innerHTML={study:vStudy,list:vList,prog:vProg,gram:vGram,more:vMore}[tab]();
 document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t==tab));
-if(tab=='list')L()}
+if(tab=='list')L();if(tab=='prog')lbLoad()}
+const sbH=()=>({apikey:S.sb.k,Authorization:'Bearer '+S.sb.k,'Content-Type':'application/json'});
+const uid=()=>String(TG&&TG.initDataUnsafe.user?TG.initDataUnsafe.user.id:(S.uid=S.uid||Math.random().toString(36).slice(2)));
+function wk(p){let r=0;const d=new Date();for(let i=0;i<7;i++){const l=p.l[d.toLocaleDateString('sv-SE')];if(l)r+=(l.r||0)+2*(l.n||0);d.setDate(d.getDate()-1)}return r}
+let _lp=0;
+async function lbPush(){if(!S.sb||!S.sb.u||!S.sb.k||!S.sb.room||Date.now()-_lp<20000)return;_lp=Date.now();
+try{await fetch(S.sb.u+'/rest/v1/scores?on_conflict=room,user_id',{method:'POST',headers:{...sbH(),Prefer:'resolution=merge-duplicates'},body:JSON.stringify({room:S.sb.room,user_id:uid(),name:P().n||'Я',week_pts:wk(P()),streak:streak(P()),updated:new Date().toISOString()})})}catch(e){}}
+async function lbLoad(){const el=$('#lb');if(!el)return;
+if(!S.sb||!S.sb.u||!S.sb.k||!S.sb.room){el.innerHTML='<b>Соревнование</b><p class=mu>Чтобы видеть счёт друг друга, заполните настройки общего счёта во вкладке «Ещё».</p>';return}
+_lp=0;await lbPush();
+try{const r=await fetch(S.sb.u+'/rest/v1/scores?room=eq.'+encodeURIComponent(S.sb.room)+'&select=name,week_pts,streak&order=week_pts.desc',{headers:sbH()});const a=await r.json();
+if(!Array.isArray(a))throw 0;
+el.innerHTML='<b>Счёт за 7 дней</b>'+a.map((x,i)=>`<div class=wr><div>${i?'':'🏆 '}${esc(x.name)}</div><div>${x.week_pts} очк. · серия ${x.streak} дн.</div></div>`).join('')+'<p class=mu>Очки: повторение = 1, новое слово = +2.</p>'}catch(e){el.innerHTML='<b>Соревнование</b><p class=mu>Не удалось загрузить счёт. Проверьте настройки.</p>'}}
+let EXQ=[],EX={on:0,i:0,sc:0,a:null,o:[],q:[]};
+function exStart(){if(!EXQ.length){alert('Файл exam.txt не найден рядом с index.html');return}
+EX={on:1,i:0,sc:0,a:null,o:[],q:shuf(EXQ.slice())};exQ()}
+function exQ(){const q=EX.q[EX.i];EX.o=shuf(q.o.slice());EX.a=null;if(q.t=='listen')say(q.p);render()}
+function exAns(k){if(EX.a!==null)return;EX.a=k;if(EX.o[k]==EX.q[EX.i].o[0])EX.sc++;render()}
+function exNext(){EX.i++;if(EX.i>=EX.q.length){EX.done=1;render()}else exQ()}
+function exStop(){EX.on=0;render()}
+function vExam(){
+if(EX.done){const pc=Math.round(EX.sc/EX.q.length*100);return `<div class="card c"><div class=big>🎓</div><p>Результат: ${EX.sc} из ${EX.q.length} (${pc}%)</p><p class=mu>Ориентир: для сдачи HSK нужно около 60%. Это учебный мини-вариант, а не настоящий экзамен.</p><button class=pri onclick="exStop()">К карточкам</button></div>`}
+const q=EX.q[EX.i],a=EX.a;
+let h=`<div class=row><button onclick="exStop()">← Выйти</button><span class=mu style="flex:1;text-align:right;align-self:center">Вопрос ${EX.i+1} из ${EX.q.length}</span></div><div class="card c"><div class=mu>${{fill:'Выберите слово',read:'Чтение',listen:'Аудирование'}[q.t]}</div>`;
+h+=q.t=='listen'?`<button class=pri onclick="say(EX.q[EX.i].p)">🔊 Прослушать</button>${a!==null?`<p class=ru>${esc(q.p)}</p>`:''}`:`<div class=ru>${esc(q.p)}</div>`;
+h+='</div>'+EX.o.map((x,i)=>{let c='';if(a!==null)c=x==q.o[0]?' qok':(i==a?' qbad':'');return `<button class="opt${c}" onclick="exAns(${i})">${esc(x)}</button>`}).join('');
+if(a!==null)h+=`<div class=card><span class=mu>${esc(q.e)}</span></div><button class=pri style="width:100%" onclick="exNext()">${EX.i+1<EX.q.length?'Дальше':'Результат'}</button>`;
+return h}
 let QZ={on:0,w:null,o:[],a:null,ok:0,n:0};
 const tr=w=>w.ru||w.en;
 function quizNext(){const ws=words().filter(w=>!S.lv||w.lv==S.lv),w=ws[Math.floor(Math.random()*ws.length)];
@@ -2106,8 +2133,8 @@ let h=`<div class=row><button onclick="quizStop()">← К карточкам</bu
 h+=QZ.o.map((x,i)=>{let c='';if(a!==null)c=x.id==w.id?' qok':(i==a?' qbad':'');return `<button class="opt${c}" onclick="quizAns(${i})">${esc(tr(x))}</button>`}).join('');
 if(a!==null){if(w.ex)h+=`<div class=card><div class=ex style="border:0;margin:0;padding:0">${esc(w.ex)}<br><span class=mu>${esc(w.ep)}</span><br>${esc(w.er)}</div></div>`;h+=`<button class=pri style="width:100%;margin-top:8px" onclick="quizNext()">Дальше</button>`}
 return h}
-function vStudy(){if(QZ.on)return vQuiz();const w=cur&&wd(cur);
-let h=`<div class=row><select onchange="S.lv=+this.value;save();build()">${LV.map((t,i)=>`<option value=${i} ${i==S.lv?'selected':''}>${t}</option>`).join('')}</select><select onchange="S.dir=+this.value;save();render()"><option value=0 ${S.dir?'':'selected'}>汉字 → перевод</option><option value=1 ${S.dir?'selected':''}>перевод → 汉字</option></select></div><button class=pri style="width:100%;margin-bottom:10px" onclick="quizStart()">📝 Мини-тест</button>`;
+function vStudy(){if(EX.on)return vExam();if(QZ.on)return vQuiz();const w=cur&&wd(cur);
+let h=`<div class=row><select onchange="S.lv=+this.value;save();build()">${LV.map((t,i)=>`<option value=${i} ${i==S.lv?'selected':''}>${t}</option>`).join('')}</select><select onchange="S.dir=+this.value;save();render()"><option value=0 ${S.dir?'':'selected'}>汉字 → перевод</option><option value=1 ${S.dir?'selected':''}>перевод → 汉字</option></select></div><button class=pri style="width:100%;margin-bottom:10px" onclick="quizStart()">📝 Мини-тест</button><button class=pri style="width:100%;margin-bottom:10px" onclick="exStart()">🎓 Пробный экзамен HSK 4</button>`;
 if(!w)return h+`<div class="card c"><div class=big>🎉</div><p>На сегодня всё. Возвращайтесь позже или увеличьте число новых слов в день во вкладке «Ещё».</p><button class=pri onclick=build()>Обновить</button></div>`;
 h+=`<div class=cnt>Осталось: ${Q.length+1}</div><div class="card c" ${flip?'':'onclick="flip=true;render()"'}>${S.dir?`<div class=ru>${esc(w.ru||w.en)}</div>`:`<div class=hz>${esc(w.h)}</div>`}`;
 if(!flip)return h+`<p class=mu>Нажмите, чтобы увидеть ответ</p></div>`;
@@ -2118,7 +2145,7 @@ function vList(){return `<div class=row><input id=q placeholder="Поиск" oni
 function L(){const q=($('#q').value||'').toLowerCase(),f=+$('#fl').value,p=P();
 $('#list').innerHTML=words().filter(w=>(!f||w.lv==f)&&(!q||(w.h+w.py+w.ru+w.en).toLowerCase().includes(q))).slice(0,2500).map(w=>{const c=p.c[w.id];return `<div class=wr><div><b class=wh>${esc(w.h)}</b> <span class=mu>${esc(w.py)}</span><br>${esc(w.ru||w.en)}</div><span class=bd>HSK ${w.lv}<br>${c?(c.i>=21?'✓ выучено':'● учу'):'○ новое'}</span></div>`}).join('')||'<p class=mu>Ничего не найдено</p>'}
 function vProg(){const p=P(),ws=words(),l=p.l[day()]||{n:0,r:0};
-let h=`<div class=card><b>Сегодня:</b> повторений ${l.r||0}, новых слов ${l.n||0}<br><b>Серия:</b> ${streak(p)} дн.</div>`;
+let h=`<div class=card id=lb><b>Соревнование</b><p class=mu>Загрузка…</p></div><div class=card><b>Сегодня:</b> повторений ${l.r||0}, новых слов ${l.n||0}<br><b>Серия:</b> ${streak(p)} дн.</div>`;
 [1,2,3,4].forEach(v=>{const a=ws.filter(w=>w.lv==v),s=a.filter(w=>p.c[w.id]),m=s.filter(w=>p.c[w.id].i>=21),pc=a.length?Math.round(s.length/a.length*100):0;
 h+=`<div class=card><b>HSK ${v}</b> <span class=mu>всего ${a.length}, начато ${s.length}, выучено ${m.length}</span><div class=bar><i style="width:${pc}%"></i></div></div>`});
 return h}
@@ -2127,6 +2154,7 @@ function vGram(){const f=`<div class=row><select onchange="GL=+this.value;render
 const a=GR.map((g,i)=>[g,i]).filter(([g])=>!GL||+g.lv==GL);
 return f+(a.length?a.map(([g,i])=>`<div class=card><span class=bd style="float:right">HSK ${esc(g.lv)}</span><b>${esc(g.p)}</b><p>${esc(g.t)}</p><div class=ex>${esc(g.ex)} <button class=sp onclick="say(GR[${i}].ex)">🔊</button><br><span class=mu>${esc(g.ep)}</span><br>${esc(g.er)}</div></div>`).join(''):'<p class=mu>Для этого уровня пока нет конструкций или файл grammar.txt не найден.</p>')}
 function vMore(){return `<div class=card><b>Новых слов в день</b><div class=row><input id=lm type=number min=1 max=100 value=${S.lim}><button onclick="S.lim=Math.max(1,+$('#lm').value||10);save();alert('Сохранено')">Сохранить</button></div></div>
+<div class=card><b>Общий счёт для двоих</b><p class=mu>Адрес и публичный ключ проекта Supabase, а также одинаковое имя комнаты у вас обоих.</p><input id=sbu style="width:100%;margin:4px 0" placeholder="https://xxxx.supabase.co" value="${esc((S.sb||{}).u||'')}"><input id=sbk style="width:100%;margin:4px 0" placeholder="Публичный ключ (anon)" value="${esc((S.sb||{}).k||'')}"><input id=sbr style="width:100%;margin:4px 0" placeholder="Имя комнаты" value="${esc((S.sb||{}).room||'')}"><button onclick="S.sb={u:$('#sbu').value.trim().replace(/[/]$/,''),k:$('#sbk').value.trim(),room:$('#sbr').value.trim()};save();alert('Сохранено')">Сохранить</button></div>
 <div class=card><b>Добавить слова</b><p class=mu>Одно слово в строке: уровень|иероглиф|пиньинь|перевод|пример|пиньинь примера|перевод примера. Пример можно не указывать.</p><textarea id=im rows=6></textarea><button class=pri onclick=imp()>Добавить слова</button></div>
 <div class=card><b>Перенос прогресса на другое устройство</b><p class=mu>Скопируйте текст ниже и вставьте его в поле на другом устройстве.</p><textarea id=ex rows=3 readonly onclick=this.select()>${esc(JSON.stringify(S))}</textarea><textarea id=bk rows=3 placeholder="Вставьте сюда копию"></textarea><button onclick=rst()>Восстановить</button></div>`}
 function imp(){const a=parse($('#im').value);S.x=[...new Map([...S.x,...a].map(w=>[w.id,w])).values()];save();$('#im').value='';_W=null;alert('Добавлено слов: '+a.length)}
@@ -2137,10 +2165,11 @@ if(TG){TG.ready();TG.expand();theme();TG.onEvent('themeChanged',theme);
 if(CS){const v=await cget(['m',...Array.from({length:NCH},(_,i)=>'c'+i)]);
 if(!v)cloudOK=false;else try{if(Object.values(v).some(Boolean)){const p=P(),c={};
 for(let i=0;i<NCH;i++)if(v['c'+i]){const o=JSON.parse(v['c'+i]);for(const id in o){const a=o[id];c[id]={e:a[0],i:a[1],r:a[2],d:a[3]*6e4}}}
-p.c=c;if(v.m){const m=JSON.parse(v.m);S.lim=m.lim||S.lim;S.lv=m.lv||0;S.dir=m.dir||0;p.l=m.l||{}}}else save('*')}catch(e){cloudOK=false}}
+p.c=c;if(v.m){const m=JSON.parse(v.m);S.lim=m.lim||S.lim;S.lv=m.lv||0;S.dir=m.dir||0;S.sb=m.sb||S.sb;p.l=m.l||{}}}else save('*')}catch(e){cloudOK=false}}
 P().n=(TG.initDataUnsafe.user||{}).first_name||P().n}
 try{const r=await fetch('ru.txt?'+Date.now());if(r.ok)setRU(R0+'\n'+await r.text())}catch(e){}
 try{const r=await fetch('grammar.txt?'+Date.now());if(r.ok)GR=(await r.text()).split('\n').map(l=>l.split('|')).filter(a=>a.length>=6).map(a=>({lv:a[0],p:a[1],t:a[2],ex:a[3],ep:a[4],er:a[5]}))}catch(e){}
+try{const r=await fetch('exam.txt?'+Date.now());if(r.ok)EXQ=(await r.text()).split('\n').map(l=>l.split('|')).filter(a=>a.length>=4).map(a=>({t:a[0],p:a[1],o:a[2].split(';'),e:a[3]}))}catch(e){}
 build()}
 init();
 </script></body></html>
