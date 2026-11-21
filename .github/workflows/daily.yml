@@ -1,0 +1,24 @@
+name: Telegram daily
+
+on:
+  schedule:
+    - cron: "0 3 * * *"    # слово дня, время по UTC
+    - cron: "0 12 * * *"   # напоминание, время по UTC
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "word или remind"
+        default: "word"
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Send message
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHAT_IDS: ${{ secrets.CHAT_IDS }}
+          APP_URL: ${{ vars.APP_URL }}
+          MODE: ${{ github.event.inputs.mode || (github.event.schedule == '0 3 * * *' && 'word' || 'remind') }}
+        run: python3 daily.py "$MODE"
